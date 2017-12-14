@@ -1,0 +1,19 @@
+{
+  "name": "webrtc-ie-shim",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "browserify": "browserify index.js -g babelify --standalone webrtc-ie-shim -o dist/webrtc-ie-shim.js  -t [ babelify --presets [ es2015-ie ] ]"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "event-target-shim": "^3.0.0",
+    "promise-polyfill": "^6.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015-ie": "^6.7.0",
+    "babelify": "^8.0.0"
+  }
+}
