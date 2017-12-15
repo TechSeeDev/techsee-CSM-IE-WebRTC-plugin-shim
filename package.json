@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "browserify": "browserify index.js -g babelify --standalone webrtc-ie-shim -o dist/webrtc-ie-shim.js  -t [ babelify --presets [ es2015-ie ] ]"
+    "browserify": "browserify -i node_mdoules/event-target-shim/dist/event-target-shim.umd.js index.js --standalone webrtc-ie-shim -o dist/webrtc-ie-shim.js  -t [ babelify --presets [ es2015-ie ] ]"
   },
   "author": "",
   "license": "ISC",
