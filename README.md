@@ -1,7 +1,7 @@
 # CSM-IE-WebRTC shim
 WebRTC shim for IE based on the [CSM-IE-WebRTC-plugin](https://github.com/CoSMoSoftware/CSM-IE-WebRTC-plugin).
 
-##Install and package
+## Install and package
 
 Install dev depencies (brorserify and babel) globaly:
 ```
@@ -18,14 +18,14 @@ Create bundled package (not minimized):
 npm run-script broserify
 ```
 
-##Usage
+## Usage
 
 Just add the bundled js package into your page:
 ```html
 <script src="dist/webrtc-ie-shim.js" type="text/javascript" async></script>
 ```
  
-##Documentation
+## Documentation
 The following webrtc 1.0 apis are supported:
 
 - MediaDevices
@@ -123,7 +123,7 @@ The following webrtc 1.0 apis are supported:
     //TODO: Promise<RTCStatsReport> getStats();
 ```
 
-##License
+## License
 
 Apache License Version 2.0, 
 January 2004
