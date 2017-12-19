@@ -1,5 +1,5 @@
 # CSM-IE-WebRTC shim
-WebRTC shim for IE based on the (CSM-IE-WebRTC-plugin)[https://github.com/CoSMoSoftware/CSM-IE-WebRTC-plugin].
+WebRTC shim for IE based on the [CSM-IE-WebRTC-plugin](https://github.com/CoSMoSoftware/CSM-IE-WebRTC-plugin).
 
 ##Install and package
 
