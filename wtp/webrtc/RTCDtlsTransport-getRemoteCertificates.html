@@ -1,0 +1,126 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RTCDtlsTransport.prototype.getRemoteCertificates</title>
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="RTCPeerConnection-helper.js"></script>
+<script>
+  'use strict';
+  
+  // The following helper functions are called from RTCPeerConnection-helper.js:
+  //   exchangeIceCandidates
+  //   doSignalingHandshake
+  
+  /*
+    5.5.  RTCDtlsTransport Interface
+      interface RTCDtlsTransport : EventTarget {
+        readonly attribute RTCDtlsTransportState state;
+        sequence<ArrayBuffer> getRemoteCertificates();
+                 attribute EventHandler          onstatechange;
+                 attribute EventHandler          onerror;
+        ...
+      };
+       enum RTCDtlsTransportState {
+        "new",
+        "connecting",
+        "connected",
+        "closed",
+        "failed"
+      };
+       getRemoteCertificates
+        Returns the certificate chain in use by the remote side, with each certificate
+        encoded in binary Distinguished Encoding Rules (DER) [X690].
+        getRemoteCertificates() will return an empty list prior to selection of the
+        remote certificate, which will be completed by the time RTCDtlsTransportState
+        transitions to "connected".
+   */
+  
+  async_test(function (t) {
+    var pc1 = new RTCPeerConnection();
+    var pc2 = new RTCPeerConnection();
+  
+    pc1.createDataChannel('test');
+    exchangeIceCandidates(pc1, pc2);
+  
+    doSignalingHandshake(pc1, pc2).then(t.step_func(function () {
+      // pc.sctp is set when set*Description(answer) is called
+      var sctpTransport1 = pc1.sctp;
+      var sctpTransport2 = pc2.sctp;
+  
+      assert_true(sctpTransport1 instanceof RTCSctpTransport, 'Expect pc.sctp to be set to valid RTCSctpTransport');
+  
+      assert_true(sctpTransport2 instanceof RTCSctpTransport, 'Expect pc.sctp to be set to valid RTCSctpTransport');
+  
+      var dtlsTransport1 = sctpTransport1.transport;
+      var dtlsTransport2 = sctpTransport2.transport;
+  
+      var testedTransports = new Set();
+  
+      // Callback function that test the respective DTLS transports
+      // when they become connected.
+      var onConnected = t.step_func(function (dtlsTransport) {
+        var certs = dtlsTransport.getRemoteCertificates();
+  
+        assert_greater_than(certs.length, 0, 'Expect DTLS transport to have at least one remote certificate when connected');
+  
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+  
+        try {
+          for (var _iterator = certs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var cert = _step.value;
+  
+            assert_true(cert instanceof ArrayBuffer, 'Expect certificate elements be instance of ArrayBuffer');
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+  
+        testedTransports.add(dtlsTransport);
+  
+        // End the test if both dtlsTransports are tested.
+        if (testedTransports.has(dtlsTransport1) && testedTransports.has(dtlsTransport2)) {
+          t.done();
+        }
+      });
+  
+      var _arr = [dtlsTransport1, dtlsTransport2];
+  
+      var _loop = function _loop() {
+        var dtlsTransport = _arr[_i];
+        if (dtlsTransport.state === 'connected') {
+          onConnected(dtlsTransport);
+        } else {
+          assert_array_equals(dtlsTransport.getCertificates(), [], 'Expect DTLS certificates be initially empty until become connected');
+  
+          dtlsTransport.addEventListener('statechange', t.step_func(function () {
+            if (dtlsTransport.state === 'connected') {
+              onConnected(dtlsTransport);
+            }
+          }));
+  
+          dtlsTransport.addEventListener('error', t.step_func(function (err) {
+            assert_unreached('Unexpected error during DTLS handshake: ' + err);
+          }));
+        }
+      };
+  
+      for (var _i = 0; _i < _arr.length; _i++) {
+        _loop();
+      }
+    }));
+  });
+
+</script>

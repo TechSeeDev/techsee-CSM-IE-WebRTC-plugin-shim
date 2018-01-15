@@ -1,0 +1,166 @@
+<!doctype html>
+<!--
+This test uses data only, and thus does not require fake media devices.
+-->
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>RTCPeerConnection GetStats</title>
+</head>
+<body>
+  <div id="log"></div>
+  <h2>Retrieved stats info</h2>
+  <pre>
+  <div id="stats">
+  </div>
+  </pre>
+
+  <!-- These files are in place when executing on W3C. -->
+  <script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+  <script src="/resources/testharnessreport.js"></script>
+  <script type="text/javascript">
+  'use strict';
+  
+  var test = async_test('Can get stats from a basic WebRTC call.');
+  
+  var gFirstConnection = null;
+  var gSecondConnection = null;
+  
+  var onIceCandidateToFirst = test.step_func(function (event) {
+    // If event.candidate is null = no more candidates.
+    if (event.candidate) {
+      gSecondConnection.addIceCandidate(event.candidate);
+    }
+  });
+  
+  var onIceCandidateToSecond = test.step_func(function (event) {
+    if (event.candidate) {
+      gFirstConnection.addIceCandidate(event.candidate);
+    }
+  });
+  
+  var onRemoteStream = test.step_func(function (event) {
+    assert_unreached('WebRTC received a stream when there was none');
+  });
+  
+  var getStatsRecordByType = function getStatsRecordByType(stats, type) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+  
+    try {
+      for (var _iterator = stats.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var stat = _step.value;
+  
+        if (stat.type == type) {
+          return stat;
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+  
+    return null;
+  };
+  
+  var onIceConnectionStateChange = test.step_func(function (event) {
+    // Wait until connection is established.
+    // Note - not all browsers reach 'completed' state, so we're
+    // checking for 'connected' state instead.
+    if (gFirstConnection.iceConnectionState != 'connected') {
+      return;
+    }
+    gFirstConnection.getStats().then(function (report) {
+      // Show the retrieved stats info
+      var showStats = document.getElementById('stats');
+      var reportDictionary = {};
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+  
+      try {
+        for (var _iterator2 = report.values()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var stats = _step2.value;
+  
+          reportDictionary[stats.id] = stats;
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+  
+      showStats.innerHTML = JSON.stringify(reportDictionary, null, 2);
+      // Check the stats properties.
+      assert_not_equals(report, null, 'No report');
+      var sessionStat = getStatsRecordByType(report, 'peer-connection');
+      assert_not_equals(sessionStat, null, 'Did not find peer-connection stats');
+      assert_exists(sessionStat, 'dataChannelsOpened', 'no dataChannelsOpened stat');
+      // Once every 4000 or so tests, the datachannel won't be opened when the getStats
+      // function is done, so allow both 0 and 1 datachannels.
+      assert_true(sessionStat.dataChannelsOpened == 1 || sessionStat.dataChannelsOpened == 0, 'dataChannelsOpened count wrong');
+      test.done();
+    }).catch(test.step_func(function (e) {
+      assert_unreached(e.name + ': ' + e.message + ': ');
+    }));
+  });
+  
+  // This function starts the test.
+  test.step(function () {
+    gFirstConnection = new RTCPeerConnection(null);
+    gFirstConnection.onicecandidate = onIceCandidateToFirst;
+    gFirstConnection.oniceconnectionstatechange = onIceConnectionStateChange;
+  
+    gSecondConnection = new RTCPeerConnection(null);
+    gSecondConnection.onicecandidate = onIceCandidateToSecond;
+    gSecondConnection.onaddstream = onRemoteStream;
+  
+    // The createDataChannel is necessary and sufficient to make
+    // sure the ICE connection be attempted.
+    gFirstConnection.createDataChannel('channel');
+    var atStep = 'Create offer';
+  
+    gFirstConnection.createOffer().then(function (offer) {
+      atStep = 'Set local description at first';
+      return gFirstConnection.setLocalDescription(offer);
+    }).then(function () {
+      atStep = 'Set remote description at second';
+      return gSecondConnection.setRemoteDescription(gFirstConnection.localDescription);
+    }).then(function () {
+      atStep = 'Create answer';
+      return gSecondConnection.createAnswer();
+    }).then(function (answer) {
+      atStep = 'Set local description at second';
+      return gSecondConnection.setLocalDescription(answer);
+    }).then(function () {
+      atStep = 'Set remote description at first';
+      return gFirstConnection.setRemoteDescription(gSecondConnection.localDescription);
+    }).catch(test.step_func(function (e) {
+      assert_unreached('Error ' + e.name + ': ' + e.message + ' happened at step ' + atStep);
+    }));
+  });
+</script>
+
+</body>
+</html>

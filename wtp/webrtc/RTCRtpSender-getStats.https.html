@@ -1,0 +1,68 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RTCRtpSender.prototype.getStats</title>
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="dictionary-helper.js"></script>
+<script src="RTCStats-helper.js"></script>
+<script>
+  'use strict';
+  
+  // Test is based on the following editor draft:
+  // webrtc-pc 20171130
+  // webrtc-stats 20171122
+  
+  // The following helper function is called from RTCStats-helper.js
+  //   validateStatsReport
+  //   assert_stats_report_has_stats
+  
+  /*
+    5.2.  RTCRtpSender Interface
+      getStats
+        1.  Let selector be the RTCRtpSender object on which the method was invoked.
+        2.  Let p be a new promise, and run the following steps in parallel:
+          1.  Gather the stats indicated by selector according to the stats selection
+              algorithm.
+          2.  Resolve p with the resulting RTCStatsReport object, containing the
+              gathered stats.
+        3.  Return p.
+     8.5. The stats selection algorithm
+      3.  If selector is an RTCRtpSender, gather stats for and add the following objects
+          to result:
+        - All RTCOutboundRTPStreamStats objects corresponding to selector.
+        - All stats objects referenced directly or indirectly by the RTCOutboundRTPStreamStats
+          objects added.
+   */
+  
+  var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+  
+  promise_test(function () {
+    var pc = new RTCPeerConnection();
+  
+    var _pc$addTransceiver = pc.addTransceiver('audio'),
+        sender = _pc$addTransceiver.sender;
+  
+    return sender.getStats().then(function (statsReport) {
+      validateStatsReport(statsReport);
+      assert_stats_report_has_stats(statsReport, ['outbound-rtp']);
+    });
+  }, 'sender.getStats() via addTransceiver should return stats report containing outbound-rtp stats');
+  
+  promise_test(function () {
+    var pc = new RTCPeerConnection();
+  
+    return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (mediaStream) {
+      var _mediaStream$getTrack = mediaStream.getTracks(),
+          _mediaStream$getTrack2 = _slicedToArray(_mediaStream$getTrack, 1),
+          track = _mediaStream$getTrack2[0];
+  
+      var sender = pc.addTrack(track, mediaStream);
+  
+      return sender.getStats().then(function (statsReport) {
+        validateStatsReport(statsReport);
+        assert_stats_report_has_stats(statsReport, ['outbound-rtp']);
+      });
+    });
+  }, 'sender.getStats() via addTrack should return stats report containing outbound-rtp stats');
+
+</script>

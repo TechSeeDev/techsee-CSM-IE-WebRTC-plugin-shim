@@ -1,0 +1,156 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Test legacy offerToReceiveAudio/Video options</title>
+<link rel="help" href="https://w3c.github.io/webrtc-pc/#legacy-configuration-extensions">
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="RTCPeerConnection-helper.js"></script>
+<script>
+  'use strict';
+  
+  // Run some tests for both audio and video kinds
+  
+  var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+  
+  ['audio', 'video'].forEach(function (kind) {
+    var capsKind = kind[0].toUpperCase() + kind.slice(1);
+  
+    var offerToReceiveTrue = {};
+    offerToReceiveTrue['offerToReceive' + capsKind] = true;
+  
+    var offerToReceiveFalse = {};
+    offerToReceiveFalse['offerToReceive' + capsKind] = false;
+  
+    // Start testing
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+      var dummy = pc.createDataChannel('foo'); // Just to have something to offer
+  
+      return pc.createOffer(offerToReceiveFalse).then(function () {
+        assert_equals(pc.getTransceivers().length, 0, 'Expect pc to have no transceivers');
+      });
+    }, 'createOffer() with offerToReceive' + capsKind + ' set to false should not create a transceiver');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+  
+      return pc.createOffer(offerToReceiveTrue).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'recvonly', 'Expect transceiver to have "recvonly" direction');
+      });
+    }, 'createOffer() with offerToReceive' + capsKind + ' should create a "recvonly" transceiver');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+  
+      return pc.createOffer(offerToReceiveTrue).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'recvonly', 'Expect transceiver to have "recvonly" direction');
+      }).then(function () {
+        return pc.createOffer(offerToReceiveTrue);
+      }).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to still have only one transceiver');
+      });
+    }, 'offerToReceive' + capsKind + ' option should be ignored if a non-stopped "recvonly" transceiver exists');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+  
+      return getTrackFromUserMedia(kind).then(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            track = _ref2[0],
+            stream = _ref2[1];
+  
+        pc.addTrack(track, stream);
+        return pc.createOffer();
+      }).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'sendrecv', 'Expect transceiver to have "sendrecv" direction');
+      }).then(function () {
+        return pc.createOffer(offerToReceiveTrue);
+      }).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to still have only one transceiver');
+      });
+    }, 'offerToReceive' + capsKind + ' option should be ignored if a non-stopped "sendrecv" transceiver exists');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+  
+      return getTrackFromUserMedia(kind).then(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            track = _ref4[0],
+            stream = _ref4[1];
+  
+        pc.addTrack(track, stream);
+        return pc.createOffer(offerToReceiveFalse);
+      }).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'sendonly', 'Expect transceiver to have "sendonly" direction');
+      });
+    }, 'offerToReceive' + capsKind + ' set to false with a track should create a "sendonly" transceiver');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+  
+      pc.addTransceiver(kind, { direction: 'recvonly' });
+  
+      return pc.createOffer(offerToReceiveFalse).then(function () {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'inactive', 'Expect transceiver to have "inactive" direction');
+      });
+    }, 'offerToReceive' + capsKind + ' set to false with a "recvonly" transceiver should change the direction to "inactive"');
+  
+    promise_test(function (t) {
+      var pc = new RTCPeerConnection();
+      var pc2 = new RTCPeerConnection();
+  
+      return getTrackFromUserMedia(kind).then(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2),
+            track = _ref6[0],
+            stream = _ref6[1];
+  
+        pc.addTrack(track, stream);
+        return pc.createOffer();
+      }).then(function (offer) {
+        return pc.setLocalDescription(offer);
+      }).then(function () {
+        return pc2.setRemoteDescription(pc.localDescription);
+      }).then(function () {
+        return pc2.createAnswer();
+      }).then(function (answer) {
+        return pc2.setLocalDescription(answer);
+      }).then(function () {
+        return pc.setRemoteDescription(pc2.localDescription);
+      }).then(function () {
+        return pc.createOffer(offerToReceiveFalse);
+      }).then(function (offer) {
+        assert_equals(pc.getTransceivers().length, 1, 'Expect pc to have one transceiver');
+  
+        var transceiver = pc.getTransceivers()[0];
+        assert_equals(transceiver.direction, 'sendonly', 'Expect transceiver to have "sendonly" direction');
+      });
+    }, 'subsequent offerToReceive' + capsKind + ' set to false with a track should change the direction to "sendonly"');
+  });
+  
+  promise_test(function (t) {
+    var pc = new RTCPeerConnection();
+  
+    return pc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true }).then(function () {
+      assert_equals(pc.getTransceivers().length, 2, 'Expect pc to have two transceivers');
+  
+      assert_equals(pc.getTransceivers()[0].direction, 'recvonly', 'Expect first transceiver to have "recvonly" direction');
+      assert_equals(pc.getTransceivers()[1].direction, 'recvonly', 'Expect second transceiver to have "recvonly" direction');
+    });
+  }, 'offerToReceiveAudio and Video should create two "recvonly" transceivers');
+
+</script>

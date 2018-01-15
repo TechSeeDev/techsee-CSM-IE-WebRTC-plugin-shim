@@ -1,0 +1,59 @@
+<!doctype html>
+<title>MediaStreamTrack IDL tests</title>
+<link rel="help" href="https://w3c.github.io/mediacapture-main/#media-stream-track-interface-definition">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/resources/WebIDLParser.js"></script>
+<script src="/resources/idlharness.js"></script>
+<script>
+"use strict";
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+function idl_test(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      dom_idl = _ref2[0],
+      stream = _ref2[1];
+
+  var idl_array = new IdlArray();
+
+  idl_array.add_untested_idls(dom_idl);
+  idl_array.add_untested_idls('interface EventHandler {};');
+  idl_array.add_idls("interface MediaStreamTrack : EventTarget {\
+    readonly    attribute DOMString             kind;\
+    readonly    attribute DOMString             id;\
+    readonly    attribute DOMString             label;\
+                attribute boolean               enabled;\
+    readonly    attribute boolean               muted;\
+                attribute EventHandler          onmute;\
+                attribute EventHandler          onunmute;\
+    readonly    attribute MediaStreamTrackState readyState;\
+                attribute EventHandler          onended;\
+                attribute EventHandler          onoverconstrained;\
+    MediaStreamTrack       clone ();\
+    void                   stop ();\
+    MediaTrackCapabilities getCapabilities ();\
+    MediaTrackConstraints  getConstraints ();\
+    MediaTrackSettings     getSettings ();\
+    Promise<void>          applyConstraints (optional MediaTrackConstraints constraints);\
+};\
+\
+enum MediaStreamTrackState {\
+    \"live\",\
+    \"ended\"\
+};");
+
+  self.track = stream.getTracks()[0];
+  idl_array.add_objects({ MediaStreamTrack: ["track"] });
+
+  idl_array.test();
+}
+
+promise_test(function () {
+  return Promise.all([fetch("/interfaces/dom.idl").then(function (response) {
+    return response.text();
+  }), navigator.mediaDevices.getUserMedia({ audio: true })]).then(idl_test);
+}, "Test driver");
+</script>
+
+
