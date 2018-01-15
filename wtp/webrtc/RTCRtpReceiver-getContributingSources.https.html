@@ -1,0 +1,106 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RTCRtpReceiver.prototype.getContributingSources</title>
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="RTCPeerConnection-helper.js"></script>
+<script>
+  'use strict';
+  
+  // Test is based on the following editor draft:
+  // https://w3c.github.io/webrtc-pc/archives/20170605/webrtc.html
+  
+  // The following helper function is called from RTCPeerConnection-helper.js
+  //   getTrackFromUserMedia
+  //   exchangeIceCandidates
+  //   doSignalingHandshake
+  
+  /*
+    5.3.  RTCRtpReceiver Interface
+      interface RTCRtpReceiver {
+        ...
+        sequence<RTCRtpContributingSource>    getContributingSources();
+      };
+       interface RTCRtpContributingSource {
+        readonly attribute DOMHighResTimeStamp timestamp;
+        readonly attribute unsigned long       source;
+        readonly attribute byte?               audioLevel;
+      };
+       audioLevel
+        The audio level contained in the last RTP packet played from this source.
+        audioLevel will be the level value defined in [RFC6465] if the RFC 6465
+        header extension is present, and otherwise null. RFC 6465 defines the
+        level as a integral value from 0 to 127 representing the audio level in
+        negative decibels relative to the loudest signal that the system could
+        possibly encode. Thus, 0 represents the loudest signal the system could
+        possibly encode, and 127 represents silence.
+   */
+  
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+  
+  var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+  
+  promise_test(function () {
+    var pc1 = new RTCPeerConnection();
+    var pc2 = new RTCPeerConnection();
+  
+    var ontrackPromise = new Promise(function (resolve) {
+      pc2.addEventListener('track', function (trackEvent) {
+        var receiver = trackEvent.receiver;
+  
+        assert_true(receiver instanceof RTCRtpReceiver, 'Expect trackEvent.receiver to be instance of RTCRtpReceiver');
+  
+        resolve(receiver);
+      });
+    });
+  
+    return getTrackFromUserMedia('audio').then(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          track = _ref2[0],
+          mediaStream = _ref2[1];
+  
+      pc1.addTrack(track, mediaStream);
+      exchangeIceCandidates(pc1, pc2);
+      return doSignalingHandshake(pc1, pc2);
+    }).then(function () {
+      return ontrackPromise;
+    }).then(function (receiver) {
+      var contributingSources = receiver.getContributingSources();
+      assert_greater_than(contributingSources.length, 0, 'Expect CSRCs to be available after RTP connection is established');
+  
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+  
+      try {
+        for (var _iterator = contributingSources[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var csrc = _step.value;
+  
+          assert_true(csrc instanceof RTCRtpContributingSource, 'Expect contributingSources elements to be instance of RTCRtpContributingSource');
+  
+          assert_equals(_typeof(csrc.timestamp), 'number', 'Expect csrc.timestamp attribute to be DOMHighResTimeStamp');
+  
+          assert_true(Number.isInteger(csrc.source) && csrc.source > 0, 'Expect CSRC identifier to be unsigned long');
+  
+          if (csrc.audioLevel !== null) {
+            assert_true(Number.isInteger(csrc.audioLevel) && csrc.audioLevel >= 0 && csrc.audioLevel <= 127, 'Expect csrc.audioLevel to be either null or byte value from 0-127.');
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    });
+  }, 'getContributingSources() should return list of CSRC after connection is established');
+
+</script>

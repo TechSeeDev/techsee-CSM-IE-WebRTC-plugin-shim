@@ -1,0 +1,96 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RTCRtpReceiver.prototype.getSynchronizationSources</title>
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="RTCPeerConnection-helper.js"></script>
+<script>
+  'use strict';
+  
+  // Test is based on the following editor draft:
+  // https://w3c.github.io/webrtc-pc/archives/20170605/webrtc.html
+  
+  /*
+    5.3.  RTCRtpReceiver Interface
+      interface RTCRtpReceiver {
+        ...
+        sequence<RTCRtpSynchronizationSource> getSynchronizationSources();
+      };
+       interface RTCRtpSynchronizationSource {
+        readonly attribute DOMHighResTimeStamp timestamp;
+        readonly attribute unsigned long       source;
+        readonly attribute byte                audioLevel;
+        readonly attribute boolean?            voiceActivityFlag;
+      };
+   */
+  
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+  
+  var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+  
+  promise_test(function () {
+    var pc1 = new RTCPeerConnection();
+    var pc2 = new RTCPeerConnection();
+  
+    var ontrackPromise = new Promise(function (resolve) {
+      pc2.addEventListener('track', function (trackEvent) {
+        var receiver = trackEvent.receiver;
+  
+        assert_true(receiver instanceof RTCRtpReceiver, 'Expect trackEvent.receiver to be instance of RTCRtpReceiver');
+  
+        resolve(receiver);
+      });
+    });
+  
+    return getTrackFromUserMedia('audio').then(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          track = _ref2[0],
+          mediaStream = _ref2[1];
+  
+      pc1.addTrack(track, mediaStream);
+      exchangeIceCandidates(pc1, pc2);
+      return doSignalingHandshake(pc1, pc2);
+    }).then(function () {
+      return ontrackPromise;
+    }).then(function (receiver) {
+      var syncSources = receiver.getSynchronizationSources();
+      assert_greater_than(syncSources.length, 0, 'Expect SSRCs to be available after RTP connection is established');
+  
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+  
+      try {
+        for (var _iterator = syncSources[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var ssrc = _step.value;
+  
+          assert_true(ssrc instanceof RTCRtpSynchronizationSource, 'Expect synchronizationSources elements to be instance of RTCSynchronizationSource');
+  
+          assert_equals(_typeof(ssrc.timestamp), 'number', 'Expect ssrc.timestamp attribute to be DOMHighResTimeStamp');
+  
+          assert_true(Number.isInteger(ssrc.source) && ssrc.source > 0, 'Expect SSRC identifier to be unsigned long');
+  
+          assert_true(Number.isInteger(ssrc.audioLevel) && ssrc.audioLevel >= 0 && ssrc.audioLevel <= 127, 'Expect ssrc.audioLevel to be byte value from 0-127.');
+  
+          if (ssrc.voiceActivityFlag !== null) {
+            assert_equals(_typeof(ssrc.voiceActivityFlag), 'boolean', 'Expect ssrc.voiceActivity to be either null or boolean');
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    });
+  }, 'getContributingSources() should return list of CSRC after connection is established');
+
+</script>

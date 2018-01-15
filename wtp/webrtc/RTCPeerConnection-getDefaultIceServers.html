@@ -1,0 +1,134 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RTCPeerConnection.getDefaultIceServers</title>
+<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script>
+  'use strict';
+  
+  // Test is based on the following editor draft:
+  // https://w3c.github.io/webrtc-pc/archives/20170605/webrtc.html
+  
+  /*
+      [Constructor(optional RTCConfiguration configuration)]
+      interface RTCPeerConnection : EventTarget {
+        static sequence<RTCIceServer>      getDefaultIceServers();
+        ...
+      };
+       dictionary RTCIceServer {
+        required (DOMString or sequence<DOMString>) urls;
+                 DOMString                          username;
+                 (DOMString or RTCOAuthCredential)  credential;
+                 RTCIceCredentialType               credentialType = "password";
+      };
+       dictionary RTCOAuthCredential {
+        required DOMString macKey;
+        required DOMString accessToken;
+      };
+       enum RTCIceCredentialType {
+        "password",
+        "oauth"
+      };
+   */
+  
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+  
+  test(function () {
+    var iceServers = RTCPeerConnection.getDefaultIceServers();
+  
+    assert_true(Array.isArray(iceServers), 'Expect iceServers to be an array');
+  
+    // dictionary IDL cannot be tested automatically using idlharness
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+  
+    try {
+      for (var _iterator = iceServers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var server = _step.value;
+        var urls = server.urls,
+            username = server.username,
+            credential = server.credential,
+            credentialType = server.credentialType;
+  
+  
+        if (Array.isArray(urls)) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+  
+          try {
+            for (var _iterator2 = urls[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var url = _step2.value;
+  
+              assert_equals(typeof url === 'undefined' ? 'undefined' : _typeof(url), 'string', 'Expect elements in urls array to be string');
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+        } else {
+          assert_equals(typeof urls === 'undefined' ? 'undefined' : _typeof(urls), 'string', 'Expect urls to be either string or array');
+        }
+  
+        if (username !== undefined) {
+          assert_equals(typeof username === 'undefined' ? 'undefined' : _typeof(username), 'string', 'Expect username to be either undefined or string');
+        }
+  
+        assert_true(credentialType === 'password' || credentialType === 'oauth', 'Expect credentialType to be either password or oauth');
+  
+        if (credential) {
+          if ((typeof credential === 'undefined' ? 'undefined' : _typeof(credential)) === 'object') {
+            var macKey = credential.macKey,
+                accessToken = credential.accessToken;
+  
+            assert_equals(typeof macKey === 'undefined' ? 'undefined' : _typeof(macKey), 'string', 'Expect macKey to be string');
+  
+            assert_equals(typeof accessToken === 'undefined' ? 'undefined' : _typeof(accessToken), 'string', 'Expect accessToken to be string');
+          } else {
+            assert_equals(typeof credential === 'undefined' ? 'undefined' : _typeof(credential), 'string', 'Expect credential to be either undefined, string, or RTCOauthCredential dictionary');
+          }
+        }
+      }
+  
+      // Expect default ice servers to be accepted as valid configuration
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+  
+    var pc = new RTCPeerConnection({ iceServers: iceServers });
+  
+    // Only make sure there are same number of ice servers configured
+    // and not do any deep equality checking
+    assert_equals(pc.getConfiguration().iceServers.length, iceServers.length);
+  }, 'RTCPeerConnection.getDefaultIceServers() should return array of RTCIceServer');
+  
+  /*
+    Coverage Report
+      Since there is no steps involved and we are only checking basic call,
+      This is counted as 1 trivial test coverage.
+       Tested    1
+      Total     1
+   */
+</script>

@@ -1,0 +1,58 @@
+<!doctype html>
+<title>MediaStreamTrack GetSettings</title>
+<p class="instructions">When prompted, accept to share your video stream.</p>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script>
+  'use strict';
+  
+  // https://w3c.github.io/mediacapture-main/archives/20170605/getusermedia.html
+  
+  promise_test(function (t) {
+    var constraints = {
+      video: true,
+      audio: false
+    };
+  
+    return navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
+      var settings1 = mediaStream.getVideoTracks()[0].getSettings();
+      var videoConstraints = {
+        deviceId: settings1.deviceId
+      };
+  
+      return navigator.mediaDevices.getUserMedia({
+        video: videoConstraints,
+        audio: false
+      }).then(function (mediaStream) {
+        var settings2 = mediaStream.getVideoTracks()[0].getSettings();
+        assert_equals(settings1.deviceId, settings2.deviceId);
+      });
+    });
+  }, 'A device can be opened twice and have the same device ID');
+  
+  promise_test(function (t) {
+    var constraints = {
+      video: true,
+      audio: false
+    };
+  
+    return navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
+      var settings1 = mediaStream.getVideoTracks()[0].getSettings();
+      var videoConstraints = {
+        deviceId: settings1.deviceId,
+        width: {
+          exact: settings1.width / 2
+        }
+      };
+  
+      return navigator.mediaDevices.getUserMedia({
+        video: videoConstraints,
+        audio: false
+      }).then(function (mediaStream) {
+        var settings2 = mediaStream.getVideoTracks()[0].getSettings();
+        assert_equals(settings1.deviceId, settings2.deviceId);
+        assert_equals(settings1.width / 2, settings2.width);
+      });
+    });
+  }, 'A device can be opened twice with different resolutions');
+</script>
