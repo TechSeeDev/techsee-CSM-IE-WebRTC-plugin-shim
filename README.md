@@ -18,6 +18,11 @@ Create bundled package (not minimized):
 npm run-script broserify
 ```
 
+## Run WTP tests
+```
+npm test
+```
+
 ## Usage
 
 Just add the bundled js package into your page:
