@@ -1,6 +1,88 @@
 # CSM-IE-WebRTC shim
 WebRTC shim for IE based on the [CSM-IE-WebRTC-plugin](https://github.com/CoSMoSoftware/CSM-IE-WebRTC-plugin).
 
+## WebRTC Web Platform Test 
+```
+√ datachannel-emptystring [0/1]
+√ getstats [0/1]
+√ historical [12/14]
+√ interfaces.https [0/1]
+√ RTCCertificate [0/5]
+√ RTCConfiguration-bundlePolicy [3/15]
+√ RTCConfiguration-iceCandidatePoolSize [2/9]
+√ RTCConfiguration-iceServers [6/77]
+√ RTCConfiguration-iceTransportPolicy [2/16]
+√ RTCConfiguration-rtcpMuxPolicy [2/11]
+√ RTCDataChannel-bufferedAmount [0/1]
+√ RTCDataChannel-id [0/2]
+√ RTCDataChannel-send [0/1]
+√ RTCDataChannelEvent-constructor [0/4]
+√ RTCDtlsTransport-getRemoteCertificates [0/1]
+√ RTCDTMFSender-insertDTMF.https [0/6]
+√ RTCDTMFSender-ontonechange-long.https [0/1]
+√ RTCDTMFSender-ontonechange.https [0/11]
+√ RTCIceCandidate-constructor [1/17]
+√ RTCIceTransport [0/2]
+√ RTCPeerConnection-addIceCandidate [14/23]
+√ RTCPeerConnection-addTrack.https [0/8]
+√ RTCPeerConnection-addTransceiver [0/15]
+√ RTCPeerConnection-canTrickleIceCandidates [1/3]
+√ RTCPeerConnection-connectionState [1/2]
+√ RTCPeerConnection-constructor [18/22]
+√ RTCPeerConnection-createAnswer [0/3]
+√ RTCPeerConnection-createDataChannel [7/30]
+√ RTCPeerConnection-createOffer-offerToReceive [0/15]
+√ RTCPeerConnection-createOffer [1/8]
+√ RTCPeerConnection-generateCertificate [0/8]
+√ RTCPeerConnection-getDefaultIceServers [0/1]
+√ RTCPeerConnection-getIdentityAssertion [0/12]
+√ RTCPeerConnection-getStats.https [0/13]
+√ RTCPeerConnection-getTransceivers [0/1]
+√ RTCPeerConnection-iceConnectionState [1/2]
+√ RTCPeerConnection-iceGatheringState [2/3]
+√ RTCPeerConnection-ondatachannel [0/3]
+√ RTCPeerConnection-onnegotiationneeded [1/7]
+√ RTCPeerConnection-ontrack.https [1/5]
+√ RTCPeerConnection-peerIdentity [0/6]
+√ RTCPeerConnection-removeTrack.https [2/12]
+√ RTCPeerConnection-setDescription-transceiver [0/5]
+√ RTCPeerConnection-setLocalDescription-answer [0/6]
+√ RTCPeerConnection-setLocalDescription-offer [2/7]
+√ RTCPeerConnection-setLocalDescription-pranswer [1/7]
+× RTCPeerConnection-setLocalDescription-rollback [null]
+× RTCPeerConnection-setLocalDescription [null]
+√ RTCPeerConnection-setRemoteDescription-answer [1/4]
+√ RTCPeerConnection-setRemoteDescription-offer [0/5]
+√ RTCPeerConnection-setRemoteDescription-pranswer [4/7]
+√ RTCPeerConnection-setRemoteDescription-replaceTrack.https [0/6]
+× RTCPeerConnection-setRemoteDescription-rollback [null]
+√ RTCPeerConnection-setRemoteDescription-tracks.https [2/12]
+× RTCPeerConnection-setRemoteDescription [null]
+√ RTCPeerConnection-track-stats.https [0/12]
+√ RTCPeerConnectionIceEvent-constructor [0/8]
+√ RTCRtpParameters-codecs [0/8]
+√ RTCRtpParameters-degradationPreference [0/2]
+√ RTCRtpParameters-encodings [0/18]
+√ RTCRtpParameters-headerExtensions [0/1]
+√ RTCRtpParameters-rtcp [0/2]
+√ RTCRtpParameters-transactionId [0/5]
+√ RTCRtpReceiver-getCapabilities [0/2]
+× RTCRtpReceiver-getContributingSources.https [No se pudo completar la operación debido un error 80020101.]
+√ RTCRtpReceiver-getParameters [0/1]
+√ RTCRtpReceiver-getStats [0/1]
+× RTCRtpReceiver-getSynchronizationSources.https [No se pudo completar la operación debido un error 80020101.]
+√ RTCRtpSender-getCapabilities [0/2]
+√ RTCRtpSender-getStats.https [0/2]
+√ RTCRtpSender-replaceTrack [0/9]
+√ RTCRtpSender-setParameters [0/1]
+√ RTCRtpTransceiver-setCodecPreferences [0/9]
+√ RTCRtpTransceiver-setDirection [0/3]
+√ RTCSctpTransport-constructor [0/2]
+√ RTCSctpTransport-maxMessageSize [0/5]
+√ RTCTrackEvent-constructor [0/7]
+TOTAL [87/557]
+```
+
 ## Install and package
 
 Install dev depencies (brorserify and babel) globaly:
@@ -22,7 +104,6 @@ npm run-script broserify
 ```
 npm test
 ```
-
 ## Usage
 
 Just add the bundled js package into your page:

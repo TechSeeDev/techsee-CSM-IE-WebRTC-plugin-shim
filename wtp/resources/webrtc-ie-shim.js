@@ -349,6 +349,7 @@ module.exports = MediaStreamTrack;
 },{"event-target-shim/dist/event-target-shim.umd.js":10}],5:[function(require,module,exports){
 "use strict";
 
+var WebRTCProxy = require("./WebRTCProxy.js");
 /*
 interface RTCIceCandidate {
     readonly attribute DOMString               candidate;
@@ -368,7 +369,57 @@ interface RTCIceCandidate {
     RTCIceCandidateInit toJSON();
 };
  */
-var RTCIceCandidate = function RTCIceCandidate(candidate, sdpMid, sdpMLineIndex, foundation, component, priority, ip, protocol, port, type, tcpType, relatedAddress, relatedPort, usernameFragment) {
+var RTCIceCandidate = function RTCIceCandidate(iceCandidateInit) {
+	//Get values from dictionary
+	var candidate = iceCandidateInit.candidate;
+	var sdpMid = iceCandidateInit.sdpMid;
+	var sdpMLineIndex = iceCandidateInit.sdpMLineIndex;
+	var usernameFragment = iceCandidateInit.usernameFragment;
+	//Not set yet
+	var foundation;
+	var component;
+	var priority;
+	var ip;
+	var protocol;
+	var port;
+	var type;
+	var tcpType;
+	var relatedAddress;
+	var relatedPort;
+
+	//Extended attributes to avoid parsing it twice
+	if (iceCandidateInit.ext) {
+		foundation = iceCandidateInit.ext.foundation;
+		component = iceCandidateInit.ext.component;
+		priority = iceCandidateInit.ext.priority;
+		ip = iceCandidateInit.ext.ip;
+		protocol = iceCandidateInit.ext.protocol;
+		port = iceCandidateInit.ext.port;
+		type = iceCandidateInit.ext.type;
+		tcpType = iceCandidateInit.ext.tcpType;
+		relatedAddress = iceCandidateInit.ext.relatedAddress;
+		relatedPort = iceCandidateInit.ext.relatedPort;
+	} else {
+		try {
+			//Parse candidate
+			var parsed = WebRTCProxy.parseIceCandidate(candidate);
+		} catch (e) {
+			throw new OperationError(e);
+		}
+		//Set parsed properties
+		foundation = parsed[0];
+		component = parsed[1];
+		priority = parsed[2];
+		ip = parsed[3];
+		protocol = parsed[4];
+		port = parsed[5];
+		type = parsed[6];
+		tcpType = parsed[7];
+		relatedAddress = parsed[8];
+		relatedPort = parsed[9];
+		if (!usernameFragment) usernameFragment = parsed[10];
+	}
+
 	//Direct attributes from init
 	Object.defineProperty(this, "candidate", { enumerable: true, configurable: false, get: function get() {
 			return candidate;
@@ -427,7 +478,7 @@ RTCIceCandidate.prototype.toJSON = function () {
 
 module.exports = RTCIceCandidate;
 
-},{}],6:[function(require,module,exports){
+},{"./WebRTCProxy.js":9}],6:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
@@ -437,10 +488,17 @@ var Promise = require("promise-polyfill");
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
 var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
 
-var ThrowInvalidStateError = function ThrowInvalidStateError() {
-	var e = new Error("RTCPeerConnection is already closed");
-	e.name = "InvalidStateError";
-	throw e;
+function newInvalidStateError() {
+	try {
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = "blob";
+	} catch (e) {
+		return e;
+	}
+}
+
+function ThrowInvalidStateError() {
+	throw newInvalidStateError();
 };
 
 /*
@@ -481,7 +539,7 @@ interface RTCPeerConnection : EventTarget {
 	attribute EventHandler           onconnectionstatechange;
 };
 */
-var RTCPeerConnection = function RTCPeerConnection(configuration) {
+var RTCPeerConnection = function RTCPeerConnection() {
 	var self = this;
 	//Init event targetr
 	EventTarget.call(this);
@@ -491,7 +549,7 @@ var RTCPeerConnection = function RTCPeerConnection(configuration) {
 
 	priv.senders = {};
 	priv.remoteStreams = {};
-	priv.configuration = configuration;
+	priv.configuration = arguments[0] || {};
 	priv.lastOffer = null;
 	priv.lastAnswer = null;
 	priv.isClosed = false;
@@ -560,7 +618,7 @@ var RTCPeerConnection = function RTCPeerConnection(configuration) {
 	}
 
 	// Create new native pc
-	priv.pc = WebRTCProxy.createPeerConnection(configuration);
+	priv.pc = WebRTCProxy.createPeerConnection(priv.configuration);
 
 	//Event handlers
 	priv.pc.onnegotiationneeded = function () {
@@ -568,7 +626,24 @@ var RTCPeerConnection = function RTCPeerConnection(configuration) {
 	};
 	priv.pc.onicecandidate = function (candidate, sdpMid, sdpMLineIndex, foundation, component, priority, ip, protocol, port, type, tcpType, relatedAddress, relatedPort, usernameFragment, url) {
 		var e = createEvent("icecandidate");
-		if (candidate) e.candidate = new RTCIceCandidate(candidate, sdpMid, sdpMLineIndex, foundation, component, priority, ip, protocol, port, type, tcpType, relatedAddress, relatedPort, usernameFragment);else e.candidate = null;
+		if (candidate) e.candidate = new RTCIceCandidate({
+			candidate: candidate,
+			sdp: sdpMid,
+			sdpMLineIndex: sdpMLineIndex,
+			ext: {
+				foundation: foundation,
+				component: component,
+				priority: priority,
+				ip: ip,
+				protocol: protocol,
+				port: port,
+				type: type,
+				tcpType: tcpType,
+				relatedAddress: relatedAddress,
+				relatedPort: relatedPort
+			},
+			usernameFragment: usernameFragment
+		});else e.candidate = null;
 		e.url = url;
 		self.dispatchEvent(e);
 	};
@@ -769,6 +844,17 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 
 	return new Promise(function (resolve, reject) {
 		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+		if (!candidate) throw new TypeError();
+
+		//We dont't support signaling end of candidates
+		if (!candidate.candidate)
+			//But we do not fail
+			return resolve();
+
+		//Reject with type error if no sdpMid and sdpMLineIndex
+		if (!candidate.sdpMid && !candidate.sdpMLineIndex) throw new TypeError();
+
+		//Add ICE candidate nativelly
 		priv.pc.addIceCandidate(function (current, pending) {
 			//Update current remote description sdp
 			if (priv.currentRemoteDescriptiont) {
@@ -780,7 +866,10 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 			}
 			//Resolve promise
 			resolve();
-		}, reject, candidate);
+		}, function (e) {
+			//Reject with invalid state error
+			reject(newInvalidStateError(e));
+		}, candidate);
 	});
 };
 

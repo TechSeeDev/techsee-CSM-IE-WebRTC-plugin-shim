@@ -5,9 +5,7 @@
 <script>
   'use strict';
   
-  // Test is based on the following editor draft:
-  // https://w3c.github.io/webrtc-pc/archives/20170605/webrtc.htm
-  
+   
   /*
     4.3.2.  Interface Definition
       interface RTCPeerConnection : EventTarget {
@@ -18,14 +16,14 @@
         readonly attribute DOMString               candidate;
         readonly attribute DOMString?              sdpMid;
         readonly attribute unsigned short?         sdpMLineIndex;
-        readonly attribute DOMString?              ufrag;
+        readonly attribute DOMString?              usernameFrag;
         ...
       };
        dictionary RTCIceCandidateInit {
         DOMString       candidate = "";
         DOMString?      sdpMid = null;
         unsigned short? sdpMLineIndex = null;
-        DOMString       ufrag;
+        DOMString       usernameFrag;
       };
    */
   
@@ -107,7 +105,7 @@
   
     return promise_rejects(t, 'InvalidStateError', pc.addIceCandidate({
       candidate: candidateStr1,
-      sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+      sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
     }));
   }, 'Add ICE candidate before setting remote description should reject with InvalidStateError');
   
@@ -120,7 +118,7 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return pc.addIceCandidate({
         candidate: candidateStr1,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       });
     });
   }, 'Add ICE candidate after setting remote description should succeed');
@@ -131,7 +129,7 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return pc.addIceCandidate(new RTCIceCandidate({
         candidate: candidateStr1,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       }));
     });
   }, 'Add ICE candidate with RTCIceCandidate should succeed');
@@ -166,7 +164,7 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return pc.addIceCandidate({
         candidate: candidateStr1,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       });
     }).then(function () {
       assert_candidate_line_between(pc.remoteDescription.sdp, mediaLine1, candidateLine1, mediaLine2);
@@ -181,7 +179,7 @@
         candidate: candidateStr2,
         sdpMid: sdpMid2,
         sdpMLineIndex: sdpMLineIndex2,
-        ufrag: ufrag2
+        usernameFrag: ufrag2
       });
     }).then(function () {
       assert_candidate_line_after(pc.remoteDescription.sdp, mediaLine2, candidateLine2);
@@ -195,7 +193,7 @@
       return pc.addIceCandidate({
         candidate: candidateStr1,
         sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex,
-        ufrag: null
+        usernameFrag: null
       });
     }).then(function () {
       assert_candidate_line_between(pc.remoteDescription.sdp, mediaLine1, candidateLine1, mediaLine2);
@@ -208,14 +206,14 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return pc.addIceCandidate({
         candidate: candidateStr1,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       });
     }).then(function () {
       return pc.addIceCandidate({
         candidate: candidateStr2,
         sdpMid: sdpMid2,
         sdpMLineIndex: sdpMLineIndex2,
-        ufrag: ufrag2
+        usernameFrag: ufrag2
       });
     }).then(function () {
       assert_candidate_line_between(pc.remoteDescription.sdp, mediaLine1, candidateLine1, mediaLine2);
@@ -241,13 +239,13 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return pc.addIceCandidate({
         candidate: candidateStr1,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       });
     }).then(function () {
       return pc.addIceCandidate({
         candidate: '',
         sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex,
-        ufrag: ufrag
+        usernameFrag: ufrag
       });
     }).then(function () {
       assert_candidate_line_between(pc.remoteDescription.sdp, mediaLine1, candidateLine1, mediaLine2);
@@ -311,7 +309,7 @@
         candidate: '',
         sdpMid: null,
         sdpMLineIndex: null,
-        ufrag: undefined
+        usernameFrag: undefined
       }));
     });
   }, 'Add candidate with manually filled default values should reject with TypeError');
@@ -329,7 +327,7 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return promise_rejects(t, 'OperationError', pc.addIceCandidate({
         candidate: candidateStr1,
-        sdpMid: 'invalid', sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: 'invalid', sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       }));
     });
   }, 'Add candidate with invalid sdpMid should reject with OperationError');
@@ -349,7 +347,7 @@
       return promise_rejects(t, 'OperationError', pc.addIceCandidate({
         candidate: candidateStr1,
         sdpMLineIndex: 2,
-        ufrag: ufrag
+        usernameFrag: ufrag
       }));
     });
   }, 'Add candidate with invalid sdpMLineIndex should reject with OperationError');
@@ -364,7 +362,7 @@
         candidate: candidateStr1,
         sdpMid: sdpMid,
         sdpMLineIndex: 2,
-        ufrag: ufrag
+        usernameFrag: ufrag
       });
     });
   }, 'Invalid sdpMLineIndex should be ignored if valid sdpMid is provided');
@@ -377,7 +375,7 @@
         candidate: candidateStr2,
         sdpMid: sdpMid2,
         sdpMLineIndex: sdpMLineIndex2,
-        ufrag: null
+        usernameFrag: null
       });
     }).then(function () {
       assert_candidate_line_after(pc.remoteDescription.sdp, mediaLine2, candidateLine2);
@@ -398,7 +396,7 @@
       return promise_rejects(t, 'OperationError', pc.addIceCandidate({
         candidate: candidateStr1,
         sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex,
-        ufrag: 'invalid'
+        usernameFrag: 'invalid'
       }));
     });
   }, 'Add candidate with invalid ufrag should reject with OperationError');
@@ -416,7 +414,7 @@
     return pc.setRemoteDescription(sessionDesc).then(function () {
       return promise_rejects(t, 'OperationError', pc.addIceCandidate({
         candidate: invalidCandidateStr,
-        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, ufrag: ufrag
+        sdpMid: sdpMid, sdpMLineIndex: sdpMLineIndex, usernameFrag: ufrag
       }));
     });
   }, 'Add candidate with invalid candidate string should reject with OperationError');
@@ -429,7 +427,7 @@
         candidate: candidateStr2,
         sdpMid: sdpMid2,
         sdpMLineIndex: sdpMLineIndex2,
-        ufrag: ufrag
+        usernameFrag: ufrag
       }));
     });
   }, 'Add candidate with sdpMid belonging to different ufrag should reject with OperationError');

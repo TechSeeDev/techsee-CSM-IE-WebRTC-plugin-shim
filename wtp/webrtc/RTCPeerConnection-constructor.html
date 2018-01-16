@@ -15,7 +15,7 @@ test(function () {
 var toStringThrows = { toString: function toString() {
     throw new Error();
   } };
-var toNumberThrows = Symbol();
+//var toNumberThrows = Symbol();
 
 // Test the first argument of the constructor. The key is the argument itself,
 // and the value is the first argument for assert_throws, or false if no
@@ -38,7 +38,7 @@ var testArgs = {
   '{ certificates: [undefined] }': new TypeError(),
 
   // iceCandidatePoolSize
-  '{ iceCandidatePoolSize: toNumberThrows }': new TypeError()
+  //'{ iceCandidatePoolSize: toNumberThrows }': new TypeError()
 };
 
 var _loop = function _loop(arg) {
