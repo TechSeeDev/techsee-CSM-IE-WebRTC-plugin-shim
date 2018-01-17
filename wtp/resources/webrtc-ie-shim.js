@@ -9,6 +9,7 @@ var VideoRenderer = require("./lib/VideoRenderer.js");
 navigator.mediaDevices = new MediaDevices();
 
 window.RTCPeerConnection = require("./lib/RTCPeerConnection.js");
+window.RTCSessionDescription = require("./lib/RTCSessionDescription.js");
 window.RTCIceCandidate = require("./lib/RTCIceCandidate.js");
 window.MediaStream = require("./lib/MediaStream.js");
 window.MediaStreamTrack = require("./lib/MediaStreamTrack.js");
@@ -62,7 +63,75 @@ for (var i = 0; i < videos.length; ++i) {
 	VideoRenderer.handle(videos[i]);
 }
 
-},{"./lib/MediaDevices.js":2,"./lib/MediaStream.js":3,"./lib/MediaStreamTrack.js":4,"./lib/RTCIceCandidate.js":5,"./lib/RTCPeerConnection.js":6,"./lib/VideoRenderer.js":8,"promise-polyfill":11}],2:[function(require,module,exports){
+},{"./lib/MediaDevices.js":3,"./lib/MediaStream.js":4,"./lib/MediaStreamTrack.js":5,"./lib/RTCIceCandidate.js":6,"./lib/RTCPeerConnection.js":7,"./lib/RTCSessionDescription.js":9,"./lib/VideoRenderer.js":10,"promise-polyfill":13}],2:[function(require,module,exports){
+"use strict";
+
+var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
+var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
+
+/*
+ interface RTCDataChannel : EventTarget {
+    readonly attribute USVString           label;
+    readonly attribute boolean             ordered;
+    readonly attribute unsigned short?     maxPacketLifeTime;
+    readonly attribute unsigned short?     maxRetransmits;
+    readonly attribute USVString           protocol;
+    readonly attribute boolean             negotiated;
+    readonly attribute unsigned short?     id;
+    readonly attribute RTCPriorityType     priority;
+    readonly attribute RTCDataChannelState readyState;
+    readonly attribute unsigned long       bufferedAmount;
+             attribute unsigned long       bufferedAmountLowThreshold;
+             attribute EventHandler        onopen;
+             attribute EventHandler        onbufferedamountlow;
+             attribute EventHandler        onerror;
+             attribute EventHandler        onclose;
+    void close();
+             attribute EventHandler        onmessage;
+             attribute DOMString           binaryType;
+    void send(USVString data);
+    void send(Blob data);
+    void send(ArrayBuffer data);
+    void send(ArrayBufferView data);
+};
+ */
+var DataChannel = function DataChannel(dataChannel) {
+  //Init event targetr
+  EventTarget.call(this);
+
+  //Private vars
+  var priv = this.priv = {
+    dataChannel: dataChannel
+  };
+
+  //Object.defineProperty(this, 'label'	, { enumerable: true, configurable: false, get: function(){ return priv.track.kind;	}});
+
+  return this;
+};
+
+//Inherit from Event Target
+DataChannel.prototype = Object.create(EventTarget.prototype, {
+  constructor: {
+    value: DataChannel,
+    configurable: true,
+    writable: true
+  }
+});
+
+// Define Event Handlers
+defineEventAttribute(DataChannel.prototype, "open");
+defineEventAttribute(DataChannel.prototype, "bufferedamountlow");
+defineEventAttribute(DataChannel.prototype, "error");
+defineEventAttribute(DataChannel.prototype, "close");
+defineEventAttribute(DataChannel.prototype, "message");
+
+DataChannel.prototype.send = function (data) {};
+
+DataChannel.prototype.close = function () {};
+
+module.exports = DataChannel;
+
+},{"event-target-shim/dist/event-target-shim.umd.js":12}],3:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
@@ -137,7 +206,7 @@ MediaDevices.prototype.getUserMedia = function (constraints) {
 
 module.exports = MediaDevices;
 
-},{"./MediaStream.js":3,"./WebRTCProxy.js":9,"event-target-shim/dist/event-target-shim.umd.js":10,"promise-polyfill":11}],3:[function(require,module,exports){
+},{"./MediaStream.js":4,"./WebRTCProxy.js":11,"event-target-shim/dist/event-target-shim.umd.js":12,"promise-polyfill":13}],4:[function(require,module,exports){
 "use strict";
 
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
@@ -253,7 +322,7 @@ MediaStream.prototype.clone = function () {
 
 module.exports = MediaStream;
 
-},{"event-target-shim/dist/event-target-shim.umd.js":10}],4:[function(require,module,exports){
+},{"event-target-shim/dist/event-target-shim.umd.js":12}],5:[function(require,module,exports){
 "use strict";
 
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
@@ -346,7 +415,7 @@ MediaStreamTrack.prototype.applyConstraints = function () {};
 
 module.exports = MediaStreamTrack;
 
-},{"event-target-shim/dist/event-target-shim.umd.js":10}],5:[function(require,module,exports){
+},{"event-target-shim/dist/event-target-shim.umd.js":12}],6:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
@@ -478,12 +547,14 @@ RTCIceCandidate.prototype.toJSON = function () {
 
 module.exports = RTCIceCandidate;
 
-},{"./WebRTCProxy.js":9}],6:[function(require,module,exports){
+},{"./WebRTCProxy.js":11}],7:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
+var RTCSessionDescription = require("./RTCSessionDescription.js");
 var RTCIceCandidate = require("./RTCIceCandidate.js");
 var RTCRtpSender = require("./RTCRtpSender.js");
+var DataChannel = require("./DataChannel.js");
 var Promise = require("promise-polyfill");
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
 var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
@@ -738,10 +809,10 @@ RTCPeerConnection.prototype.createOffer = function (options) {
 		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
 		priv.pc.createOffer(function (type, sdp) {
 			priv.lastOffer = sdp;
-			resolve({
+			resolve(new RTCSessionDescription({
 				type: type,
 				sdp: sdp
-			});
+			}));
 		}, reject, options);
 	});
 };
@@ -753,10 +824,10 @@ RTCPeerConnection.prototype.createAnswer = function (options) {
 		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
 		priv.pc.createAnswer(function (type, sdp) {
 			priv.lastAnswer = sdp;
-			resolve({
+			resolve(new RTCSessionDescription({
 				type: type,
 				sdp: sdp
-			});
+			}));
 		}, reject, options);
 	});
 };
@@ -955,11 +1026,28 @@ RTCPeerConnection.prototype.removeTrack = function (rtpSender) {
 	delete priv.senders[senderId];
 };
 
+RTCPeerConnection.prototype.createDataChannel = function (label, dataChannelDict) {
+	var priv = this.priv;
+
+	if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+
+	if (!label) return new TypeError();
+
+	//Create native datachannel
+	var dataChannel = priv.pc.createDataChannel(label, dataChannelDict);
+
+	//Check
+	if (!dataChannel) return null;
+
+	//Return wrapper
+	return new DataChannel(dataChannel);
+};
+
 defineEventAttribute(RTCPeerConnection.prototype, "track");
 
 module.exports = RTCPeerConnection;
 
-},{"./RTCIceCandidate.js":5,"./RTCRtpSender.js":7,"./WebRTCProxy.js":9,"event-target-shim/dist/event-target-shim.umd.js":10,"promise-polyfill":11}],7:[function(require,module,exports){
+},{"./DataChannel.js":2,"./RTCIceCandidate.js":6,"./RTCRtpSender.js":8,"./RTCSessionDescription.js":9,"./WebRTCProxy.js":11,"event-target-shim/dist/event-target-shim.umd.js":12,"promise-polyfill":13}],8:[function(require,module,exports){
 'use strict';
 
 /*
@@ -1018,7 +1106,51 @@ RTCRtpSender.prototype.getStats = function () {
 
 module.exports = RTCRtpSender;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+"use strict";
+
+/*
+ [Constructor(RTCSessionDescriptionInit descriptionInitDict),
+ Exposed=Window]
+interface RTCSessionDescription {
+    readonly attribute RTCSdpType type;
+    readonly attribute DOMString  sdp;
+    [Default] object toJSON();
+}; 
+ 
+ dictionary RTCSessionDescriptionInit {
+    required RTCSdpType type;
+             DOMString  sdp = "";
+};
+
+ */
+
+function RTCSessionDescription(descriptionInitDict) {
+	//Get values from dictionary
+	var type = descriptionInitDict.type;
+	var sdp = descriptionInitDict.sdp;
+
+	//Direct attributes from init
+	Object.defineProperty(this, "type", { enumerable: true, configurable: false, get: function get() {
+			return type;
+		} });
+	Object.defineProperty(this, "sdp", { enumerable: true, configurable: false, get: function get() {
+			return sdp;
+		} });
+
+	return this;
+};
+
+RTCSessionDescription.prototype.toJSON = function () {
+	return {
+		type: this.type,
+		sdp: this.sdp
+	};
+};
+
+module.exports = RTCSessionDescription;
+
+},{}],10:[function(require,module,exports){
 "use strict";
 
 // This obvserver checks when a video element has been set a srcObj
@@ -1162,7 +1294,7 @@ VideoRenderer.prototype.hide = function () {
 
 module.exports = VideoRenderer;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 // Create singleton
@@ -1170,7 +1302,7 @@ var WebRTCProxy = new ActiveXObject("Cosmo.WebRTCProxy.1");
 
 module.exports = WebRTCProxy;
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @author Toru Nagashima <https://github.com/mysticatea>
  * @copyright 2017 Toru Nagashima. All rights reserved.
@@ -1178,7 +1310,7 @@ module.exports = WebRTCProxy;
  */(function(a,b){'object'==typeof exports&&'undefined'!=typeof module?b(exports):'function'==typeof define&&define.amd?define(['exports'],b):b(a.EventTargetShim={})})(this,function(a){'use strict';function b(a){var b=s.get(a);return console.assert(null!=b,'\'this\' is expected an Event object, but got',a),b}function c(a,b){s.set(this,{eventTarget:a,event:b,eventPhase:2,currentTarget:a,canceled:!1,stopped:!1,passiveListener:null,timeStamp:b.timeStamp||Date.now()}),Object.defineProperty(this,'isTrusted',{value:!1,enumerable:!0});for(var c,e=Object.keys(b),f=0;f<e.length;++f)c=e[f],c in this||Object.defineProperty(this,c,d(c))}function d(a){return{get:function(){return b(this).event[a]},set:function(c){b(this).event[a]=c},configurable:!0,enumerable:!0}}function e(a){return{value:function(){var c=b(this).event;return c[a].apply(c,arguments)},configurable:!0,enumerable:!0}}function f(a,b){function c(b,c){a.call(this,b,c)}var f=Object.keys(b);if(0===f.length)return a;c.prototype=Object.create(a.prototype,{constructor:{value:c,configurable:!0,writable:!0}});for(var g,h=0;h<f.length;++h)if(g=f[h],!(g in a.prototype)){var i=Object.getOwnPropertyDescriptor(b,g),j='function'==typeof i.value;Object.defineProperty(c.prototype,g,j?e(g):d(g))}return c}function g(a){if(null==a||a===Object.prototype)return c;var b=t.get(a);return null==b&&(b=f(g(Object.getPrototypeOf(a)),a),t.set(a,b)),b}function h(a,b){var c=g(Object.getPrototypeOf(b));return new c(a,b)}function i(a){return b(a).stopped}function j(a,c){b(a).eventPhase=c}function k(a,c){b(a).currentTarget=c}function l(a,c){b(a).passiveListener=c}function m(a){return null!==a&&'object'===('undefined'==typeof a?'undefined':u(a))}function n(a){var b=v.get(a);return console.assert(null!=b,'\'this\' is expected an EventTarget object, but got',a),b||new Map}function o(a){return{get:function(){for(var b=n(this),c=b.get(a);null!=c;){if(c.listenerType===y)return c.listener;c=c.next}return null},set:function(b){'function'==typeof b||m(b)||(b=null);for(var c=n(this),d=null,e=c.get(a);null!=e;)e.listenerType===y?null==d?null===e.next?c.delete(a):c.set(a,e.next):d.next=e.next:d=e,e=e.next;if(null!==b){var f={listener:b,listenerType:y,passive:!1,once:!1,next:null};null===d?c.set(a,f):d.next=f}},configurable:!0,enumerable:!0}}function p(a,b){Object.defineProperty(a,'on'+b,o(b))}function q(a){function b(){r.call(this)}b.prototype=Object.create(r.prototype,{constructor:{value:b,configurable:!0,writable:!0}});for(var c=0;c<a.length;++c)p(b.prototype,a[c]);return b}function r(){if(this instanceof r)return void v.set(this,new Map);if(1===arguments.length&&Array.isArray(arguments[0]))return q(arguments[0]);if(0<arguments.length){for(var a=Array(arguments.length),b=0;b<arguments.length;++b)a[b]=arguments[b];return q(a)}throw new TypeError('Cannot call a class as a function')}var s=new WeakMap,t=new WeakMap;c.prototype={get type(){return b(this).event.type},get target(){return b(this).eventTarget},get currentTarget(){return b(this).currentTarget},composedPath:function(){var a=b(this).currentTarget;return null==a?[]:[a]},get NONE(){return 0},get CAPTURING_PHASE(){return 1},get AT_TARGET(){return 2},get BUBBLING_PHASE(){return 3},get eventPhase(){return b(this).eventPhase},stopPropagation:function(){var a=b(this);'function'==typeof a.event.stopPropagation&&a.event.stopPropagation()},stopImmediatePropagation:function(){var a=b(this);a.stopped=!0,'function'==typeof a.event.stopImmediatePropagation&&a.event.stopImmediatePropagation()},get bubbles(){return!!b(this).event.bubbles},get cancelable(){return!!b(this).event.cancelable},preventDefault:function(){var a=b(this);return null==a.passiveListener?void(!a.event.cancelable||(a.canceled=!0,'function'==typeof a.event.preventDefault&&a.event.preventDefault())):void console.warn('Event#preventDefault() was called from a passive listener:',a.passiveListener)},get defaultPrevented(){return b(this).canceled},get composed(){return!!b(this).event.composed},get timeStamp(){return b(this).timeStamp}},Object.defineProperty(c.prototype,'constructor',{value:c,configurable:!0,writable:!0}),'undefined'!=typeof window&&'undefined'!=typeof window.Event&&(Object.setPrototypeOf(c.prototype,window.Event.prototype),t.set(window.Event.prototype,c));var u='function'==typeof Symbol&&'symbol'==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&'function'==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?'symbol':typeof a},v=new WeakMap,w=1,x=2,y=3;if(r.prototype={addEventListener:function(a,b,c){if(null==b)return!1;if('function'!=typeof b&&!m(b))throw new TypeError('\'listener\' should be a function or an object.');var d=n(this),e=m(c),f=e?!!c.capture:!!c,g=f?w:x,h={listener:b,listenerType:g,passive:e&&!!c.passive,once:e&&!!c.once,next:null},i=d.get(a);if(void 0===i)return d.set(a,h),!0;for(var j=null;null!=i;){if(i.listener===b&&i.listenerType===g)return!1;j=i,i=i.next}return j.next=h,!0},removeEventListener:function(a,b,c){if(null==b)return!1;for(var d=n(this),e=m(c)?!!c.capture:!!c,f=e?w:x,g=null,h=d.get(a);null!=h;){if(h.listener===b&&h.listenerType===f)return null==g?null===h.next?d.delete(a):d.set(a,h.next):g.next=h.next,!0;g=h,h=h.next}return!1},dispatchEvent:function(a){if(null==a||'string'!=typeof a.type)throw new TypeError('"event.type" should be a string.');var b=n(this),c=a.type,d=b.get(c);if(null==d)return!0;for(var e=h(this,a),f=null;null!=d&&(d.once?null==f?null===d.next?b.delete(c):b.set(c,d.next):f.next=d.next:f=d,l(e,d.passive?d.listener:null),'function'==typeof d.listener?d.listener.call(this,e):d.listenerType!==y&&'function'==typeof d.listener.handleEvent&&d.listener.handleEvent(e),!i(e));)d=d.next;return l(e,null),j(e,0),k(e,null),!e.defaultPrevented}},Object.defineProperty(r.prototype,'constructor',{value:r,configurable:!0,writable:!0}),'undefined'!=typeof window&&'undefined'!=typeof window.EventTarget&&Object.setPrototypeOf(r.prototype,window.EventTarget.prototype),a.defineEventAttribute=p,a.EventTarget=r,a['default']=r,Object.defineProperty(a,'__esModule',{value:!0}),'undefined'==typeof module&&'undefined'==typeof define){const a=Function('return this');a.EventTargetShim=r,a.EventTargetShim.defineEventAttribute=p}});
 
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (root) {
 
   // Store setTimeout reference so promise-polyfill will be unaffected by

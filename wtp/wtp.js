@@ -36,7 +36,17 @@ function trowError (err)
 
 }
 
-
+const TEST_STATUSES = {
+        PASS:0,
+        FAIL:1,
+        TIMEOUT:2,
+        NOTRUN:3
+    };
+var status_text = {};
+    status_text[TEST_STATUSES.PASS] = "Pass";
+    status_text[TEST_STATUSES.FAIL] = "Fail";
+    status_text[TEST_STATUSES.TIMEOUT] = "Timeout";
+    status_text[TEST_STATUSES.NOTRUN] = "Not Run";
 
 async function runall (tests, out)
 {
@@ -58,7 +68,8 @@ async function runall (tests, out)
 				const result = await run (driver, test);
 				//Check resutls
 				if (result.tests.status!=0)
-					throw result.tests.message;
+					throw status_text[result.tests.status] + (result.tests.message || "");
+				
 				//Acumulate
 				total += result.tests.total;
 				passed += result.tests.passed;

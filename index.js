@@ -2,15 +2,16 @@
 // TODO: Check if we are in correct IE version
 
 // Add objects to global
-var MediaDevices	 = require("./lib/MediaDevices.js");
-var VideoRenderer	 = require("./lib/VideoRenderer.js");
-navigator.mediaDevices	 = new MediaDevices();
+var MediaDevices		= require("./lib/MediaDevices.js");
+var VideoRenderer		= require("./lib/VideoRenderer.js");
+navigator.mediaDevices		= new MediaDevices();
 
-window.RTCPeerConnection = require("./lib/RTCPeerConnection.js");
-window.RTCIceCandidate   = require("./lib/RTCIceCandidate.js");
-window.MediaStream	 = require("./lib/MediaStream.js");
-window.MediaStreamTrack	 = require("./lib/MediaStreamTrack.js");
-window.Promise	         = require("promise-polyfill");
+window.RTCPeerConnection	= require("./lib/RTCPeerConnection.js");
+window.RTCSessionDescription	= require("./lib/RTCSessionDescription.js");
+window.RTCIceCandidate		= require("./lib/RTCIceCandidate.js");
+window.MediaStream		= require("./lib/MediaStream.js");
+window.MediaStreamTrack		= require("./lib/MediaStreamTrack.js");
+window.Promise			= require("promise-polyfill");
 
 
 function checkNewNode(node) 
