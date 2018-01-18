@@ -1,137 +1,325 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.webrtcIeShim = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+exports.endianness = function () { return 'LE' };
+
+exports.hostname = function () {
+    if (typeof location !== 'undefined') {
+        return location.hostname
+    }
+    else return '';
+};
+
+exports.loadavg = function () { return [] };
+
+exports.uptime = function () { return 0 };
+
+exports.freemem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.totalmem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.cpus = function () { return [] };
+
+exports.type = function () { return 'Browser' };
+
+exports.release = function () {
+    if (typeof navigator !== 'undefined') {
+        return navigator.appVersion;
+    }
+    return '';
+};
+
+exports.networkInterfaces
+= exports.getNetworkInterfaces
+= function () { return {} };
+
+exports.arch = function () { return 'javascript' };
+
+exports.platform = function () { return 'browser' };
+
+exports.tmpdir = exports.tmpDir = function () {
+    return '/tmp';
+};
+
+exports.EOL = '\n';
+
+exports.homedir = function () {
+	return '/'
+};
+
+},{}],2:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],3:[function(require,module,exports){
 "use strict";
 
-// TODO: Check if we are in correct IE version
+var browser = require("detect-browser").detect();
 
-// Add objects to global
-var MediaDevices = require("./lib/MediaDevices.js");
-var VideoRenderer = require("./lib/VideoRenderer.js");
-navigator.mediaDevices = new MediaDevices();
+//If it is not internet exploer, do nothign
+if (browser.name === "ie") {
 
-window.RTCPeerConnection = require("./lib/RTCPeerConnection.js");
-window.RTCSessionDescription = require("./lib/RTCSessionDescription.js");
-window.RTCIceCandidate = require("./lib/RTCIceCandidate.js");
-window.MediaStream = require("./lib/MediaStream.js");
-window.MediaStreamTrack = require("./lib/MediaStreamTrack.js");
-window.Promise = require("promise-polyfill");
-
-function checkNewNode(node) {
-	//If it is a video element
-	if (node.nodeName === 'video')
-		// Observe changes in the video element
-		return VideoRenderer.handle(node);
-	//Look in childs
-	for (var j = 0; j < node.childNodes.length; j++) {
-		checkNewNode(node.childNodes.item(j));
-	}
-}
-
-function checkRemovedNode(node) {
-	//If it is a video element
-	if (node.nodeName === 'video') return VideoRenderer.unhandle(node);
-	//Look in childs
-	for (var j = 0; j < node.childNodes.length; j++) {
-		checkRemovedNode(node.childNodes.item(j));
-	}
-}
-
-// DOM mutation observer to check when a new video element has been added to the DOM
-var domObserver = new MutationObserver(function (mutations) {
-	for (var i = 0, numMutations = mutations.length; i < numMutations; i++) {
-		var mutation = mutations[i];
-
-		// Check if there has been addition or deletion of nodes
-		if (mutation.type !== 'childList') continue;
-
-		// Check added nodes.
-		for (var j = 0, numNodes = mutation.addedNodes.length; j < numNodes; j++) {
-			//Check node recursively
-			checkNewNode(mutation.addedNodes[j]);
-		} // Check removed nodes.
-		for (j = 0, numNodes = mutation.removedNodes.length; j < numNodes; j++) {
-			//Check node recursively
-			checkRemovedNode(mutation.removedNodes[j]);
+	//Helper functions to check video nodes
+	var checkNewNode = function checkNewNode(node) {
+		//If it is a video element
+		if (node.nodeName === 'video')
+			// Observe changes in the video element
+			return VideoRenderer.handle(node);
+		//Look in childs
+		for (var j = 0; j < node.childNodes.length; j++) {
+			checkNewNode(node.childNodes.item(j));
 		}
+	};
+
+	var checkRemovedNode = function checkRemovedNode(node) {
+		//If it is a video element
+		if (node.nodeName === 'video') return VideoRenderer.unhandle(node);
+		//Look in childs
+		for (var j = 0; j < node.childNodes.length; j++) {
+			checkRemovedNode(node.childNodes.item(j));
+		}
+	};
+
+	// DOM mutation observer to check when a new video element has been added to the DOM
+
+
+	// Add objects to global
+	var MediaDevices = require("./lib/MediaDevices.js");
+	var VideoRenderer = require("./lib/VideoRenderer.js");
+	navigator.mediaDevices = new MediaDevices();
+
+	window.RTCPeerConnection = require("./lib/RTCPeerConnection.js");
+	window.RTCSessionDescription = require("./lib/RTCSessionDescription.js");
+	window.RTCIceCandidate = require("./lib/RTCIceCandidate.js");
+	window.MediaStream = require("./lib/MediaStream.js");
+	window.MediaStreamTrack = require("./lib/MediaStreamTrack.js");
+	window.Promise = require("promise-polyfill");var domObserver = new MutationObserver(function (mutations) {
+		for (var i = 0, numMutations = mutations.length; i < numMutations; i++) {
+			var mutation = mutations[i];
+
+			// Check if there has been addition or deletion of nodes
+			if (mutation.type !== 'childList') continue;
+
+			// Check added nodes.
+			for (var j = 0, numNodes = mutation.addedNodes.length; j < numNodes; j++) {
+				//Check node recursively
+				checkNewNode(mutation.addedNodes[j]);
+			} // Check removed nodes.
+			for (j = 0, numNodes = mutation.removedNodes.length; j < numNodes; j++) {
+				//Check node recursively
+				checkRemovedNode(mutation.removedNodes[j]);
+			}
+		}
+	});
+
+	//Get all video elements already present
+	var videos = document.getElementsByTagName("video");
+
+	//Handle them
+	for (var i = 0; i < videos.length; ++i) {
+		VideoRenderer.handle(videos[i]);
 	}
-});
-
-//Get all video elements already present
-var videos = document.getElementsByTagName("video");
-
-//Handle them
-for (var i = 0; i < videos.length; ++i) {
-	VideoRenderer.handle(videos[i]);
 }
 
-},{"./lib/MediaDevices.js":3,"./lib/MediaStream.js":4,"./lib/MediaStreamTrack.js":5,"./lib/RTCIceCandidate.js":6,"./lib/RTCPeerConnection.js":7,"./lib/RTCSessionDescription.js":9,"./lib/VideoRenderer.js":10,"promise-polyfill":13}],2:[function(require,module,exports){
+},{"./lib/MediaDevices.js":5,"./lib/MediaStream.js":6,"./lib/MediaStreamTrack.js":7,"./lib/RTCIceCandidate.js":9,"./lib/RTCPeerConnection.js":10,"./lib/RTCSessionDescription.js":12,"./lib/VideoRenderer.js":13,"detect-browser":15,"promise-polyfill":17}],4:[function(require,module,exports){
 "use strict";
 
-var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
-var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
+function InvalidStateError() {
+	try {
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = "blob";
+	} catch (e) {
+		return e;
+	}
+}
 
-/*
- interface RTCDataChannel : EventTarget {
-    readonly attribute USVString           label;
-    readonly attribute boolean             ordered;
-    readonly attribute unsigned short?     maxPacketLifeTime;
-    readonly attribute unsigned short?     maxRetransmits;
-    readonly attribute USVString           protocol;
-    readonly attribute boolean             negotiated;
-    readonly attribute unsigned short?     id;
-    readonly attribute RTCPriorityType     priority;
-    readonly attribute RTCDataChannelState readyState;
-    readonly attribute unsigned long       bufferedAmount;
-             attribute unsigned long       bufferedAmountLowThreshold;
-             attribute EventHandler        onopen;
-             attribute EventHandler        onbufferedamountlow;
-             attribute EventHandler        onerror;
-             attribute EventHandler        onclose;
-    void close();
-             attribute EventHandler        onmessage;
-             attribute DOMString           binaryType;
-    void send(USVString data);
-    void send(Blob data);
-    void send(ArrayBuffer data);
-    void send(ArrayBufferView data);
-};
- */
-var DataChannel = function DataChannel(dataChannel) {
-  //Init event targetr
-  EventTarget.call(this);
+module.exports = InvalidStateError;
 
-  //Private vars
-  var priv = this.priv = {
-    dataChannel: dataChannel
-  };
-
-  //Object.defineProperty(this, 'label'	, { enumerable: true, configurable: false, get: function(){ return priv.track.kind;	}});
-
-  return this;
-};
-
-//Inherit from Event Target
-DataChannel.prototype = Object.create(EventTarget.prototype, {
-  constructor: {
-    value: DataChannel,
-    configurable: true,
-    writable: true
-  }
-});
-
-// Define Event Handlers
-defineEventAttribute(DataChannel.prototype, "open");
-defineEventAttribute(DataChannel.prototype, "bufferedamountlow");
-defineEventAttribute(DataChannel.prototype, "error");
-defineEventAttribute(DataChannel.prototype, "close");
-defineEventAttribute(DataChannel.prototype, "message");
-
-DataChannel.prototype.send = function (data) {};
-
-DataChannel.prototype.close = function () {};
-
-module.exports = DataChannel;
-
-},{"event-target-shim/dist/event-target-shim.umd.js":12}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
@@ -206,7 +394,7 @@ MediaDevices.prototype.getUserMedia = function (constraints) {
 
 module.exports = MediaDevices;
 
-},{"./MediaStream.js":4,"./WebRTCProxy.js":11,"event-target-shim/dist/event-target-shim.umd.js":12,"promise-polyfill":13}],4:[function(require,module,exports){
+},{"./MediaStream.js":6,"./WebRTCProxy.js":14,"event-target-shim/dist/event-target-shim.umd.js":16,"promise-polyfill":17}],6:[function(require,module,exports){
 "use strict";
 
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
@@ -322,7 +510,7 @@ MediaStream.prototype.clone = function () {
 
 module.exports = MediaStream;
 
-},{"event-target-shim/dist/event-target-shim.umd.js":12}],5:[function(require,module,exports){
+},{"event-target-shim/dist/event-target-shim.umd.js":16}],7:[function(require,module,exports){
 "use strict";
 
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
@@ -415,7 +603,207 @@ MediaStreamTrack.prototype.applyConstraints = function () {};
 
 module.exports = MediaStreamTrack;
 
-},{"event-target-shim/dist/event-target-shim.umd.js":12}],6:[function(require,module,exports){
+},{"event-target-shim/dist/event-target-shim.umd.js":16}],8:[function(require,module,exports){
+"use strict";
+
+var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
+var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
+var InvalidStateError = require("./InvalidStateError.js");
+
+/*
+ interface RTCRTCDataChannel : EventTarget {
+    readonly attribute USVString           label;
+    readonly attribute boolean             ordered;
+    readonly attribute unsigned short?     maxPacketLifeTime;
+    readonly attribute unsigned short?     maxRetransmits;
+    readonly attribute USVString           protocol;
+    readonly attribute boolean             negotiated;
+    readonly attribute unsigned short?     id;
+    readonly attribute RTCPriorityType     priority;
+    readonly attribute RTCRTCDataChannelState readyState;
+    readonly attribute unsigned long       bufferedAmount;
+             attribute unsigned long       bufferedAmountLowThreshold;
+             attribute EventHandler        onopen;
+             attribute EventHandler        onbufferedamountlow;
+             attribute EventHandler        onerror;
+             attribute EventHandler        onclose;
+    void close();
+             attribute EventHandler        onmessage;
+             attribute DOMString           binaryType;
+    void send(USVString data);
+    void send(Blob data);
+    void send(ArrayBuffer data);
+    void send(ArrayBufferView data);
+};
+ */
+var RTCDataChannel = function RTCDataChannel(dataChannel) {
+	//Init event targetr
+	EventTarget.call(this);
+
+	//Private vars
+	var self = this;
+	var priv = this.priv = {
+		binaryType: "blob",
+		dataChannel: dataChannel
+	};
+
+	//Read only properties
+	Object.defineProperty(this, 'label', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.label;
+		} });
+	Object.defineProperty(this, 'ordered', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.ordered;
+		} });
+	Object.defineProperty(this, 'maxPacketLifeTime', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.maxPacketLifeTime;
+		} });
+	Object.defineProperty(this, 'protocol', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.protocol;
+		} });
+	Object.defineProperty(this, 'negotiated', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.negotiated;
+		} });
+	Object.defineProperty(this, 'id', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.id;
+		} });
+	Object.defineProperty(this, 'priority', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.priority;
+		} });
+	Object.defineProperty(this, 'readyState', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.readyState;
+		} });
+	Object.defineProperty(this, 'bufferedAmount', { enumerable: true, configurable: false, get: function get() {
+			return priv.dataChannel.bufferedAmount;
+		} });
+	//Read & write
+	Object.defineProperty(this, 'bufferedAmountLowThreshold', { enumerable: true, configurable: false,
+		get: function get() {
+			return priv.dataChannel.bufferedAmountLowThreshold;
+		},
+		set: function set(bufferedAmountLowThreshold) {
+			return priv.dataChannel.bufferedAmountLowThreshold = bufferedAmountLowThreshold;
+		}
+	});
+	Object.defineProperty(this, 'binaryType', { enumerable: true, configurable: false,
+		get: function get() {
+			return priv.dataChannel.bufferedAmount;
+		},
+		set: function set(binaryType) {
+			if (binaryType !== "blob" && binaryType !== "arraybuffer") throw new SyntaxError();
+			return priv.binaryType = binaryType;
+		}
+	});
+
+	function createEvent(name) {
+		var e = document.createEvent("Event");
+		e.initEvent(name, false, false);
+		return e;
+	}
+
+	function fire(name) {
+		self.dispatchEvent(createEvent(name));
+	}
+
+	//Set event
+	priv.dataChannel.onopen = function () {
+		fire("open");
+	};
+	priv.dataChannel.onbufferedamountlow = function () {
+		fire("bufferedamountlow");
+	};
+	priv.dataChannel.onerror = function () {
+		fire("error");
+	};
+	priv.dataChannel.onclose = function () {
+		fire("close");
+	};
+	priv.dataChannel.onmessage = function (message) {
+		//Create event
+		var event = createEvent("message");
+
+		//Check if message is binary
+		if (typeof message !== "string") {
+			//Create uint array
+			var array = new Uint8Array(message);
+			//Check binary type
+			if (priv.binaryType === "blob") {
+				//Create blob builder
+				var builder = new MSBlobBuilder();
+				//Append message
+				builder.append(array);
+				//Get blob
+				event.data = builder.getBlob();
+			} else if (priv.binaryType === "arraybuffer") {
+				//Get array buffer
+				event.data = array.buffer;
+			} else return;
+		} else {
+			//It is a string
+			event.data = message;
+		}
+
+		//Check if 
+		self.dispatchEvent(event);
+	};
+
+	//Done
+	return this;
+};
+
+//Inherit from Event Target
+RTCDataChannel.prototype = Object.create(EventTarget.prototype, {
+	constructor: {
+		value: RTCDataChannel,
+		configurable: true,
+		writable: true
+	}
+});
+
+// Define Event Handlers
+defineEventAttribute(RTCDataChannel.prototype, "open");
+defineEventAttribute(RTCDataChannel.prototype, "bufferedamountlow");
+defineEventAttribute(RTCDataChannel.prototype, "error");
+defineEventAttribute(RTCDataChannel.prototype, "close");
+defineEventAttribute(RTCDataChannel.prototype, "message");
+
+RTCDataChannel.prototype.send = function (data) {
+	var self = this;
+	//Check state
+	if (this.readyState !== "open") throw new InvalidStateError();
+
+	try {
+		//Check type
+		if (data instanceof Blob) {
+			var reader = new FileReader();
+			reader.onloadend = function () {
+				//Create array from buffer
+				var array = new Uint8Array(reader.result);
+				//Send it
+				self.priv.dataChannel.send(array);
+			};
+			//Read data as array
+			reader.readAsArrayBuffer(data);
+		} else if (data instanceof ArrayBuffer) {
+			//Send it
+			this.priv.dataChannel.send(array);
+		} else if (typeof data === "string") {
+			//Send it
+			this.priv.dataChannel.send(data);
+		} else {
+			throw new TypeError();
+		}
+	} catch (e) {
+		throw InvalidStateError();
+	}
+};
+
+RTCDataChannel.prototype.close = function () {
+	this.priv.dataChannel.close();
+};
+
+module.exports = RTCDataChannel;
+
+},{"./InvalidStateError.js":4,"event-target-shim/dist/event-target-shim.umd.js":16}],9:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
@@ -471,7 +859,7 @@ var RTCIceCandidate = function RTCIceCandidate(iceCandidateInit) {
 	} else {
 		try {
 			//Parse candidate
-			var parsed = WebRTCProxy.parseIceCandidate(candidate);
+			var parsed = WebRTCProxy.parseIceCandidate(candidate).toArray();
 		} catch (e) {
 			throw new OperationError(e);
 		}
@@ -547,29 +935,21 @@ RTCIceCandidate.prototype.toJSON = function () {
 
 module.exports = RTCIceCandidate;
 
-},{"./WebRTCProxy.js":11}],7:[function(require,module,exports){
+},{"./WebRTCProxy.js":14}],10:[function(require,module,exports){
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
 var RTCSessionDescription = require("./RTCSessionDescription.js");
 var RTCIceCandidate = require("./RTCIceCandidate.js");
 var RTCRtpSender = require("./RTCRtpSender.js");
-var DataChannel = require("./DataChannel.js");
+var DataChannel = require("./RTCDataChannel.js");
 var Promise = require("promise-polyfill");
+var InvalidStateError = require("./InvalidStateError.js");
 var EventTarget = require("event-target-shim/dist/event-target-shim.umd.js").EventTarget;
 var defineEventAttribute = require("event-target-shim/dist/event-target-shim.umd.js").defineEventAttribute;
 
-function newInvalidStateError() {
-	try {
-		var xhr = new XMLHttpRequest();
-		xhr.responseType = "blob";
-	} catch (e) {
-		return e;
-	}
-}
-
 function ThrowInvalidStateError() {
-	throw newInvalidStateError();
+	throw new InvalidStateError();
 };
 
 /*
@@ -625,13 +1005,6 @@ var RTCPeerConnection = function RTCPeerConnection() {
 	priv.lastAnswer = null;
 	priv.isClosed = false;
 
-	//Emtpy attributes
-	priv.currentLocalDescription = null;
-	priv.pendingLocalDescription = null;
-
-	priv.currentRemoteDescription = null;
-	priv.pendingRemoteDescription = null;
-
 	var signalingState = "stable";
 	var iceGatheringState = "new";
 	var iceConnectionState = "new";
@@ -640,26 +1013,30 @@ var RTCPeerConnection = function RTCPeerConnection() {
 	//TODO: Implement this
 	var canTrickleIceCandidates = null;
 
+	function toSessionDescription(sdp) {
+		return typeof sdp === "unknown" ? new RTCSessionDescription(sdp.toArray()) : null;
+	}
+
 	//Define read only properties for each attribute
 	//The localDescription attribute must return pendingLocalDescription if it is not null and otherwise it must return currentLocalDescription .
 	Object.defineProperty(this, 'localDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.pendingLocalDescription || priv.currentLocalDescription;
+			return toSessionDescription(priv.pc.localDescription);
 		} });
 	Object.defineProperty(this, 'currentLocalDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.currentLocalDescription;
+			return toSessionDescription(priv.pc.currentLocalDescription);
 		} });
 	Object.defineProperty(this, 'pendingLocalDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.pendingLocalDescription;
+			return toSessionDescription(priv.pc.pendingLocalDescription);
 		} });
 
 	Object.defineProperty(this, 'remoteDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.currentRemoteDescription || priv.pendingRemoteDescription;
+			return toSessionDescription(priv.pc.remoteDescription);
 		} });
 	Object.defineProperty(this, 'currentRemoteDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.currentRemoteDescription;
+			return toSessionDescription(priv.pc.currentRemoteDescription);
 		} });
 	Object.defineProperty(this, 'pendingRemoteDescription', { enumerable: true, configurable: false, get: function get() {
-			return priv.pendingRemoteDescription;
+			return toSessionDescription(priv.pc.pendingRemoteDescription);
 		} });
 
 	Object.defineProperty(this, 'signalingState', { enumerable: true, configurable: false, get: function get() {
@@ -759,12 +1136,15 @@ var RTCPeerConnection = function RTCPeerConnection() {
 
 			//For each track in stream
 			for (var i = 0; i < mediaStreamTracks.length; ++i) {
-				var e = createEvent("track");
-				e.track = mediaStreamTracks[i];
-				e.receiver = { track: mediaStreamTracks[i] };
-				e.transceiver = { receiver: e.receiver };
-				e.streams = [stream];
-				self.dispatchEvent(e);
+				//Create evnet
+				var event = createEvent("track");
+				//Add data
+				event.track = mediaStreamTracks[i];
+				event.receiver = { track: mediaStreamTracks[i] };
+				event.transceiver = { receiver: event.receiver };
+				event.streams = [stream];
+				//Fire it
+				self.dispatchEvent(event);
 			}
 		});
 	};
@@ -772,6 +1152,15 @@ var RTCPeerConnection = function RTCPeerConnection() {
 	priv.pc.onremovestream = function (label) {
 		//Delete from remote stream list
 		delete priv.remotes[label];
+	};
+
+	priv.pc.ondatachannel = function (dataChannel) {
+		//Create event
+		var event = createEvent("datachannel");
+		//Create datachannel
+		event.channel = new DataChannel(dataChannel);
+		//Fire event
+		self.dispatchEvent(event);
 	};
 };
 
@@ -806,7 +1195,7 @@ RTCPeerConnection.prototype.createOffer = function (options) {
 	var priv = this.priv;
 
 	return new Promise(function (resolve, reject) {
-		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 		priv.pc.createOffer(function (type, sdp) {
 			priv.lastOffer = sdp;
 			resolve(new RTCSessionDescription({
@@ -821,7 +1210,7 @@ RTCPeerConnection.prototype.createAnswer = function (options) {
 	var priv = this.priv;
 
 	return new Promise(function (resolve, reject) {
-		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 		priv.pc.createAnswer(function (type, sdp) {
 			priv.lastAnswer = sdp;
 			resolve(new RTCSessionDescription({
@@ -842,35 +1231,8 @@ RTCPeerConnection.prototype.setLocalDescription = function (description) {
 	if (!description.sdp && "offer" === description.type) description.sdp = priv.lastOffer;
 
 	return new Promise(function (resolve, reject) {
-		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
-		priv.pc.setLocalDescription(function () {
-			//If description is applied successfully:
-			switch (description.type) {
-				case "offer":
-					//If description is of type "offer", set connection.pendingLocalDescription to description and signaling state to "have-local-offer".
-					priv.pendingLocalDescription = description;
-					break;
-				case "answer":
-					//If description is of type "answer", then this completes an offer answer negotiation. 
-					//Set connection's currentLocalDescription to description and currentRemoteDescription to the value of pendingRemoteDescription . 
-					//Set both pendingRemoteDescription and pendingLocalDescription to null. Finally set connection's signaling state to "stable"
-					priv.currentLocalDescription = description;
-					priv.currentRemoteDescription = priv.pendingRemoteDescription;
-					priv.pendingLocalDescription = null;
-					priv.pendingRemoteDescription = null;
-					break;
-				case "rollback":
-					//If description is of type "rollback", then this is a rollback. Set connection.pendingLocalDescription to null and signaling state to "stable".
-					priv.pendingLocalDescription = null;
-					break;
-				case "pranswer":
-					//If description is of type "pranswer", then set connection.pendingLocalDescription to description and signaling state to "have-local-pranswer".
-					priv.pendingLocalDescription = description;
-					break;
-			}
-			//Resolve promiose
-			resolve();
-		}, reject, description);
+		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
+		priv.pc.setLocalDescription(resolve, reject, description);
 	});
 };
 
@@ -878,35 +1240,8 @@ RTCPeerConnection.prototype.setRemoteDescription = function (description) {
 	var priv = this.priv;
 
 	return new Promise(function (resolve, reject) {
-		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
-		priv.pc.setRemoteDescription(function () {
-			//If description is applied successfully:
-			switch (description.type) {
-				case "offer":
-					//If description is of type "offer", set connection.pendingRemoteDescription attribute to description and signaling state to "have-remote-offer".
-					priv.pendingRemoteDescription = description;
-					break;
-				case "answer":
-					//If description is of type "answer", then this completes an offer answer negotiation. 
-					//Set connection's currentRemoteDescription to description and currentLocalDescription to the value of pendingLocalDescription . 
-					//Set both pendingRemoteDescription and pendingLocalDescription to null. Finally set connection's signaling state to "stable"
-					priv.currentRemoteDescription = description;
-					priv.currentLocalDescription = priv.pendingLocalDescription;
-					priv.pendingLocalDescription = null;
-					priv.pendingRemoteDescription = null;
-					break;
-				case "rollback":
-					//If description is of type "rollback", then this is a rollback. Set connection.pendingRemoteDescription to null and signaling state to "stable".
-					priv.pendingRemoteDescription = null;
-					break;
-				case "pranswer":
-					//If description is of type "pranswer", then set connection.pendingRemoteDescription to description and signaling state to "have-remote-pranswer".
-					priv.pendingRemoteDescription = description;
-					break;
-			}
-			//Resolve promiose
-			resolve();
-		}, reject, description);
+		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
+		priv.pc.setRemoteDescription(resolve, reject, description);
 	});
 };
 
@@ -914,7 +1249,7 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 	var priv = this.priv;
 
 	return new Promise(function (resolve, reject) {
-		if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 		if (!candidate) throw new TypeError();
 
 		//We dont't support signaling end of candidates
@@ -923,31 +1258,17 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 			return resolve();
 
 		//Reject with type error if no sdpMid and sdpMLineIndex
-		if (!candidate.sdpMid && !candidate.sdpMLineIndex) throw new TypeError();
+		if (typeof candidate.sdpMLineIndex !== "number" && typeof candidate.sdpMLineIndex !== "number") throw new TypeError();
 
 		//Add ICE candidate nativelly
-		priv.pc.addIceCandidate(function (current, pending) {
-			//Update current remote description sdp
-			if (priv.currentRemoteDescriptiont) {
-				if (current.length) priv.currentRemoteDescriptiont.sdp = current;else priv.currentRemoteDescriptiont.sdp = null;
-			}
-			//Update pending remote description sdp
-			if (priv.pendingRemoteDescription) {
-				if (pending.length) priv.pendingRemoteDescription.sdp = pending;else priv.pendingRemoteDescription.sdp = null;
-			}
-			//Resolve promise
-			resolve();
-		}, function (e) {
-			//Reject with invalid state error
-			reject(newInvalidStateError(e));
-		}, candidate);
+		priv.pc.addIceCandidate(resolve, ThrowInvalidStateError, candidate);
 	});
 };
 
 RTCPeerConnection.prototype.close = function () {
 
 	var priv = this.priv;
-	if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 	//Close it
 	priv.pc.close();
 };
@@ -965,7 +1286,7 @@ partial interface RTCPeerConnection {
 RTCPeerConnection.prototype.addTrack = function () {
 	var priv = this.priv;
 
-	if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 
 	//Parse arguments
 	var track = arguments[0];
@@ -1005,16 +1326,16 @@ RTCPeerConnection.prototype.addStream = function (stream) {
 RTCPeerConnection.prototype.removeTrack = function (rtpSender) {
 	var priv = this.priv;
 
-	if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 
 	//Check if sender is invalid
-	if (!rtpSender || !rtpSender.priv.sender || !rtpSender.priv.track) return ThrowInvalidStateError();
+	if (!rtpSender || !rtpSender.priv.sender || !rtpSender.priv.track) throw new InvalidStateError();
 
 	//Get native sender id
 	var senderId = rtpSender.priv.id;
 
 	//Check if senders is from this pc
-	if (!priv.senders.hasOwnProperty(senderId)) return ThrowInvalidStateError();
+	if (!priv.senders.hasOwnProperty(senderId)) throw new InvalidStateError();
 
 	//Pass the nateive object
 	priv.pc.removeTrack(rtpSender.priv.sender);
@@ -1026,12 +1347,23 @@ RTCPeerConnection.prototype.removeTrack = function (rtpSender) {
 	delete priv.senders[senderId];
 };
 
+defineEventAttribute(RTCPeerConnection.prototype, "track");
+
+/*
+partial interface RTCPeerConnection {
+    readonly attribute RTCSctpTransport? sctp;
+    RTCDataChannel createDataChannel(USVString label,
+                                     optional RTCDataChannelInit dataChannelDict);
+             attribute EventHandler      ondatachannel;
+};
+*/
 RTCPeerConnection.prototype.createDataChannel = function (label, dataChannelDict) {
 	var priv = this.priv;
 
-	if (!priv.pc || priv.isClosed) return ThrowInvalidStateError();
+	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 
-	if (!label) return new TypeError();
+	//Check if we have a string label (can be empty)
+	if (typeof label !== "string") return new TypeError();
 
 	//Create native datachannel
 	var dataChannel = priv.pc.createDataChannel(label, dataChannelDict);
@@ -1043,11 +1375,11 @@ RTCPeerConnection.prototype.createDataChannel = function (label, dataChannelDict
 	return new DataChannel(dataChannel);
 };
 
-defineEventAttribute(RTCPeerConnection.prototype, "track");
+defineEventAttribute(RTCPeerConnection.prototype, "datachannel");
 
 module.exports = RTCPeerConnection;
 
-},{"./DataChannel.js":2,"./RTCIceCandidate.js":6,"./RTCRtpSender.js":8,"./RTCSessionDescription.js":9,"./WebRTCProxy.js":11,"event-target-shim/dist/event-target-shim.umd.js":12,"promise-polyfill":13}],8:[function(require,module,exports){
+},{"./InvalidStateError.js":4,"./RTCDataChannel.js":8,"./RTCIceCandidate.js":9,"./RTCRtpSender.js":11,"./RTCSessionDescription.js":12,"./WebRTCProxy.js":14,"event-target-shim/dist/event-target-shim.umd.js":16,"promise-polyfill":17}],11:[function(require,module,exports){
 'use strict';
 
 /*
@@ -1106,7 +1438,7 @@ RTCRtpSender.prototype.getStats = function () {
 
 module.exports = RTCRtpSender;
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 /*
@@ -1127,8 +1459,9 @@ interface RTCSessionDescription {
 
 function RTCSessionDescription(descriptionInitDict) {
 	//Get values from dictionary
-	var type = descriptionInitDict.type;
-	var sdp = descriptionInitDict.sdp;
+	// we support custom constructor to pass array instead of object as "dictionary" from activexobject
+	var type = Array.isArray(descriptionInitDict) ? descriptionInitDict[0] : descriptionInitDict.type;
+	var sdp = Array.isArray(descriptionInitDict) ? descriptionInitDict[1] : descriptionInitDict.sdp;
 
 	//Direct attributes from init
 	Object.defineProperty(this, "type", { enumerable: true, configurable: false, get: function get() {
@@ -1150,7 +1483,7 @@ RTCSessionDescription.prototype.toJSON = function () {
 
 module.exports = RTCSessionDescription;
 
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 // This obvserver checks when a video element has been set a srcObj
@@ -1294,15 +1627,196 @@ VideoRenderer.prototype.hide = function () {
 
 module.exports = VideoRenderer;
 
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
-// Create singleton
-var WebRTCProxy = new ActiveXObject("Cosmo.WebRTCProxy.1");
+var browser = require("detect-browser").detect();
+
+var WebRTCProxy;
+
+//If it is internet exploer
+if (browser.name === "ie")
+	// Create singleton
+	WebRTCProxy = new ActiveXObject("Cosmo.WebRTCProxy.1");
 
 module.exports = WebRTCProxy;
 
-},{}],12:[function(require,module,exports){
+},{"detect-browser":15}],15:[function(require,module,exports){
+(function (process){
+/**
+  # detect-browser
+
+  This is a package that attempts to detect a browser vendor and version (in
+  a semver compatible format) using a navigator useragent in a browser or
+  `process.version` in node.
+
+  ## NOTE: Version 2.x release
+
+  Release 2.0 introduces a breaking API change (hence the major release)
+  which requires invocation of a `detect` function rather than just inclusion of
+  the module.  PR [#46](https://github.com/DamonOehlman/detect-browser/pull/46)
+  provides more context as to why this change has been made.
+
+  ## Example Usage
+
+  <<< examples/simple.js
+
+  Or you can use a switch statement:
+
+  <<< examples/switch.js
+
+  ## Adding additional browser support
+
+  The current list of browsers that can be detected by `detect-browser` is
+  not exhaustive. If you have a browser that you would like to add support for
+  then please submit a pull request with the implementation.
+
+  Creating an acceptable implementation requires two things:
+
+  1. A test demonstrating that the regular expression you have defined identifies
+     your new browser correctly.  Examples of this can be found in the 
+     `test/logic.js` file.
+
+  2. Write the actual regex to the `lib/detectBrowser.js` file. In most cases adding
+     the regex to the list of existing regexes will be suitable (if usage of `detect-brower`
+     returns `undefined` for instance), but in some cases you might have to add it before
+     an existing regex.  This would be true for a case where you have a browser that
+     is a specialised variant of an existing browser but is identified as the
+     non-specialised case.
+
+  When writing the regular expression remember that you would write it containing a
+  single [capturing group](https://regexone.com/lesson/capturing_groups) which
+  captures the version number of the browser.
+
+**/
+
+function detect() {
+  var nodeVersion = getNodeVersion();
+  if (nodeVersion) {
+    return nodeVersion;
+  } else if (typeof navigator !== 'undefined') {
+    return parseUserAgent(navigator.userAgent);
+  }
+
+  return null;
+}
+
+function detectOS(userAgentString) {
+  var rules = getOperatingSystemRules();
+  var detected = rules.filter(function (os) {
+    return os.rule && os.rule.test(userAgentString);
+  })[0];
+
+  return detected ? detected.name : null;
+}
+
+function getNodeVersion() {
+  var isNode = typeof navigator === 'undefined' && typeof process !== 'undefined';
+  return isNode ? {
+    name: 'node',
+    version: process.version.slice(1),
+    os: require('os').type().toLowerCase()
+  } : null;
+}
+
+function parseUserAgent(userAgentString) {
+  var browsers = getBrowserRules();
+  if (!userAgentString) {
+    return null;
+  }
+
+  var detected = browsers.map(function(browser) {
+    var match = browser.rule.exec(userAgentString);
+    var version = match && match[1].split(/[._]/).slice(0,3);
+
+    if (version && version.length < 3) {
+      version = version.concat(version.length == 1 ? [0, 0] : [0]);
+    }
+
+    return match && {
+      name: browser.name,
+      version: version.join('.')
+    };
+  }).filter(Boolean)[0] || null;
+
+  if (detected) {
+    detected.os = detectOS(userAgentString);
+  }
+
+  return detected;
+}
+
+function getBrowserRules() {
+  return buildRules([
+    [ 'edge', /Edge\/([0-9\._]+)/ ],
+    [ 'yandexbrowser', /YaBrowser\/([0-9\._]+)/ ],
+    [ 'vivaldi', /Vivaldi\/([0-9\.]+)/ ],
+    [ 'kakaotalk', /KAKAOTALK\s([0-9\.]+)/ ],
+    [ 'chrome', /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/ ],
+    [ 'phantomjs', /PhantomJS\/([0-9\.]+)(:?\s|$)/ ],
+    [ 'crios', /CriOS\/([0-9\.]+)(:?\s|$)/ ],
+    [ 'firefox', /Firefox\/([0-9\.]+)(?:\s|$)/ ],
+    [ 'fxios', /FxiOS\/([0-9\.]+)/ ],
+    [ 'opera', /Opera\/([0-9\.]+)(?:\s|$)/ ],
+    [ 'opera', /OPR\/([0-9\.]+)(:?\s|$)$/ ],
+    [ 'ie', /Trident\/7\.0.*rv\:([0-9\.]+).*\).*Gecko$/ ],
+    [ 'ie', /MSIE\s([0-9\.]+);.*Trident\/[4-7].0/ ],
+    [ 'ie', /MSIE\s(7\.0)/ ],
+    [ 'bb10', /BB10;\sTouch.*Version\/([0-9\.]+)/ ],
+    [ 'android', /Android\s([0-9\.]+)/ ],
+    [ 'ios', /Version\/([0-9\._]+).*Mobile.*Safari.*/ ],
+    [ 'safari', /Version\/([0-9\._]+).*Safari/ ]
+  ]);
+}
+
+function getOperatingSystemRules() {
+  return buildRules([
+    [ 'iOS', /iP(hone|od|ad)/ ],
+    [ 'Android OS', /Android/ ],
+    [ 'BlackBerry OS', /BlackBerry|BB10/ ],
+    [ 'Windows Mobile', /IEMobile/ ],
+    [ 'Amazon OS', /Kindle/ ],
+    [ 'Windows 3.11', /Win16/ ],
+    [ 'Windows 95', /(Windows 95)|(Win95)|(Windows_95)/ ],
+    [ 'Windows 98', /(Windows 98)|(Win98)/ ],
+    [ 'Windows 2000', /(Windows NT 5.0)|(Windows 2000)/ ],
+    [ 'Windows XP', /(Windows NT 5.1)|(Windows XP)/ ],
+    [ 'Windows Server 2003', /(Windows NT 5.2)/ ],
+    [ 'Windows Vista', /(Windows NT 6.0)/ ],
+    [ 'Windows 7', /(Windows NT 6.1)/ ],
+    [ 'Windows 8', /(Windows NT 6.2)/ ],
+    [ 'Windows 8.1', /(Windows NT 6.3)/ ],
+    [ 'Windows 10', /(Windows NT 10.0)/ ],
+    [ 'Windows ME', /Windows ME/ ],
+    [ 'Open BSD', /OpenBSD/ ],
+    [ 'Sun OS', /SunOS/ ],
+    [ 'Linux', /(Linux)|(X11)/ ],
+    [ 'Mac OS', /(Mac_PowerPC)|(Macintosh)/ ],
+    [ 'QNX', /QNX/ ],
+    [ 'BeOS', /BeOS/ ],
+    [ 'OS/2', /OS\/2/ ],
+    [ 'Search Bot', /(nuhk)|(Googlebot)|(Yammybot)|(Openbot)|(Slurp)|(MSNBot)|(Ask Jeeves\/Teoma)|(ia_archiver)/ ]
+  ]);
+}
+
+function buildRules(ruleTuples) {
+  return ruleTuples.map(function(tuple) {
+    return {
+      name: tuple[0],
+      rule: tuple[1]
+    };
+  });
+}
+
+module.exports = {
+  detect: detect,
+  detectOS: detectOS,
+  getNodeVersion: getNodeVersion,
+  parseUserAgent: parseUserAgent
+};
+
+}).call(this,require('_process'))
+},{"_process":2,"os":1}],16:[function(require,module,exports){
 /**
  * @author Toru Nagashima <https://github.com/mysticatea>
  * @copyright 2017 Toru Nagashima. All rights reserved.
@@ -1310,7 +1824,7 @@ module.exports = WebRTCProxy;
  */(function(a,b){'object'==typeof exports&&'undefined'!=typeof module?b(exports):'function'==typeof define&&define.amd?define(['exports'],b):b(a.EventTargetShim={})})(this,function(a){'use strict';function b(a){var b=s.get(a);return console.assert(null!=b,'\'this\' is expected an Event object, but got',a),b}function c(a,b){s.set(this,{eventTarget:a,event:b,eventPhase:2,currentTarget:a,canceled:!1,stopped:!1,passiveListener:null,timeStamp:b.timeStamp||Date.now()}),Object.defineProperty(this,'isTrusted',{value:!1,enumerable:!0});for(var c,e=Object.keys(b),f=0;f<e.length;++f)c=e[f],c in this||Object.defineProperty(this,c,d(c))}function d(a){return{get:function(){return b(this).event[a]},set:function(c){b(this).event[a]=c},configurable:!0,enumerable:!0}}function e(a){return{value:function(){var c=b(this).event;return c[a].apply(c,arguments)},configurable:!0,enumerable:!0}}function f(a,b){function c(b,c){a.call(this,b,c)}var f=Object.keys(b);if(0===f.length)return a;c.prototype=Object.create(a.prototype,{constructor:{value:c,configurable:!0,writable:!0}});for(var g,h=0;h<f.length;++h)if(g=f[h],!(g in a.prototype)){var i=Object.getOwnPropertyDescriptor(b,g),j='function'==typeof i.value;Object.defineProperty(c.prototype,g,j?e(g):d(g))}return c}function g(a){if(null==a||a===Object.prototype)return c;var b=t.get(a);return null==b&&(b=f(g(Object.getPrototypeOf(a)),a),t.set(a,b)),b}function h(a,b){var c=g(Object.getPrototypeOf(b));return new c(a,b)}function i(a){return b(a).stopped}function j(a,c){b(a).eventPhase=c}function k(a,c){b(a).currentTarget=c}function l(a,c){b(a).passiveListener=c}function m(a){return null!==a&&'object'===('undefined'==typeof a?'undefined':u(a))}function n(a){var b=v.get(a);return console.assert(null!=b,'\'this\' is expected an EventTarget object, but got',a),b||new Map}function o(a){return{get:function(){for(var b=n(this),c=b.get(a);null!=c;){if(c.listenerType===y)return c.listener;c=c.next}return null},set:function(b){'function'==typeof b||m(b)||(b=null);for(var c=n(this),d=null,e=c.get(a);null!=e;)e.listenerType===y?null==d?null===e.next?c.delete(a):c.set(a,e.next):d.next=e.next:d=e,e=e.next;if(null!==b){var f={listener:b,listenerType:y,passive:!1,once:!1,next:null};null===d?c.set(a,f):d.next=f}},configurable:!0,enumerable:!0}}function p(a,b){Object.defineProperty(a,'on'+b,o(b))}function q(a){function b(){r.call(this)}b.prototype=Object.create(r.prototype,{constructor:{value:b,configurable:!0,writable:!0}});for(var c=0;c<a.length;++c)p(b.prototype,a[c]);return b}function r(){if(this instanceof r)return void v.set(this,new Map);if(1===arguments.length&&Array.isArray(arguments[0]))return q(arguments[0]);if(0<arguments.length){for(var a=Array(arguments.length),b=0;b<arguments.length;++b)a[b]=arguments[b];return q(a)}throw new TypeError('Cannot call a class as a function')}var s=new WeakMap,t=new WeakMap;c.prototype={get type(){return b(this).event.type},get target(){return b(this).eventTarget},get currentTarget(){return b(this).currentTarget},composedPath:function(){var a=b(this).currentTarget;return null==a?[]:[a]},get NONE(){return 0},get CAPTURING_PHASE(){return 1},get AT_TARGET(){return 2},get BUBBLING_PHASE(){return 3},get eventPhase(){return b(this).eventPhase},stopPropagation:function(){var a=b(this);'function'==typeof a.event.stopPropagation&&a.event.stopPropagation()},stopImmediatePropagation:function(){var a=b(this);a.stopped=!0,'function'==typeof a.event.stopImmediatePropagation&&a.event.stopImmediatePropagation()},get bubbles(){return!!b(this).event.bubbles},get cancelable(){return!!b(this).event.cancelable},preventDefault:function(){var a=b(this);return null==a.passiveListener?void(!a.event.cancelable||(a.canceled=!0,'function'==typeof a.event.preventDefault&&a.event.preventDefault())):void console.warn('Event#preventDefault() was called from a passive listener:',a.passiveListener)},get defaultPrevented(){return b(this).canceled},get composed(){return!!b(this).event.composed},get timeStamp(){return b(this).timeStamp}},Object.defineProperty(c.prototype,'constructor',{value:c,configurable:!0,writable:!0}),'undefined'!=typeof window&&'undefined'!=typeof window.Event&&(Object.setPrototypeOf(c.prototype,window.Event.prototype),t.set(window.Event.prototype,c));var u='function'==typeof Symbol&&'symbol'==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&'function'==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?'symbol':typeof a},v=new WeakMap,w=1,x=2,y=3;if(r.prototype={addEventListener:function(a,b,c){if(null==b)return!1;if('function'!=typeof b&&!m(b))throw new TypeError('\'listener\' should be a function or an object.');var d=n(this),e=m(c),f=e?!!c.capture:!!c,g=f?w:x,h={listener:b,listenerType:g,passive:e&&!!c.passive,once:e&&!!c.once,next:null},i=d.get(a);if(void 0===i)return d.set(a,h),!0;for(var j=null;null!=i;){if(i.listener===b&&i.listenerType===g)return!1;j=i,i=i.next}return j.next=h,!0},removeEventListener:function(a,b,c){if(null==b)return!1;for(var d=n(this),e=m(c)?!!c.capture:!!c,f=e?w:x,g=null,h=d.get(a);null!=h;){if(h.listener===b&&h.listenerType===f)return null==g?null===h.next?d.delete(a):d.set(a,h.next):g.next=h.next,!0;g=h,h=h.next}return!1},dispatchEvent:function(a){if(null==a||'string'!=typeof a.type)throw new TypeError('"event.type" should be a string.');var b=n(this),c=a.type,d=b.get(c);if(null==d)return!0;for(var e=h(this,a),f=null;null!=d&&(d.once?null==f?null===d.next?b.delete(c):b.set(c,d.next):f.next=d.next:f=d,l(e,d.passive?d.listener:null),'function'==typeof d.listener?d.listener.call(this,e):d.listenerType!==y&&'function'==typeof d.listener.handleEvent&&d.listener.handleEvent(e),!i(e));)d=d.next;return l(e,null),j(e,0),k(e,null),!e.defaultPrevented}},Object.defineProperty(r.prototype,'constructor',{value:r,configurable:!0,writable:!0}),'undefined'!=typeof window&&'undefined'!=typeof window.EventTarget&&Object.setPrototypeOf(r.prototype,window.EventTarget.prototype),a.defineEventAttribute=p,a.EventTarget=r,a['default']=r,Object.defineProperty(a,'__esModule',{value:!0}),'undefined'==typeof module&&'undefined'==typeof define){const a=Function('return this');a.EventTargetShim=r,a.EventTargetShim.defineEventAttribute=p}});
 
 
-},{}],13:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (root) {
 
   // Store setTimeout reference so promise-polyfill will be unaffected by
@@ -1545,5 +2059,5 @@ module.exports = WebRTCProxy;
 
 })(this);
 
-},{}]},{},[1])(1)
+},{}]},{},[3])(3)
 });

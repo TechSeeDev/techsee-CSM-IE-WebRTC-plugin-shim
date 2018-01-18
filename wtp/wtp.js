@@ -68,7 +68,7 @@ async function runall (tests, out)
 				const result = await run (driver, test);
 				//Check resutls
 				if (result.tests.status!=0)
-					throw status_text[result.tests.status] + (result.tests.message || "");
+					throw status_text[result.tests.status] + (result.tests.message ? ": " + result.tests.message : "");
 				
 				//Acumulate
 				total += result.tests.total;

@@ -89,7 +89,7 @@ and ensures that an empty string sent by one is received by the second.
     sendChannel.onopen = onSendChannelOpen;
   
     gFirstConnection.createOffer().then(gFirstConnection.setLocalDescription.bind(gFirstConnection)).then(exchangeDescription(gSecondConnection, gFirstConnection)).then(function () {
-      return gSecondConnection.createAnswer();
+		return gSecondConnection.createAnswer();
     }).then(gSecondConnection.setLocalDescription.bind(gSecondConnection)).then(exchangeDescription(gFirstConnection, gSecondConnection)).catch(test.step_func(function (e) {
       assert_unreached('Error ' + e.name + ': ' + e.message);
     }));

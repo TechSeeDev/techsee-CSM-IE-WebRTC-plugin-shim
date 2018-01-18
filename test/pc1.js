@@ -110,6 +110,13 @@ function call() {
     onIceStateChange(pc2, e);
   };
   pc2.ontrack = gotRemoteStream;
+  
+  pc2.ondatachhanel = function(channel) {
+    trace("got datachanel");
+    channel.onmessage(function(message){
+	console.log(message);    
+    });
+  }
 
   localStream.getTracks().forEach(
     function(track) {
@@ -195,6 +202,13 @@ function onCreateAnswerSuccess(desc) {
     },
     onSetSessionDescriptionError
   );
+  
+  var dc = pc1.createDataChannel("test");
+  dc.onopen = function() {
+    trace("dc::open");
+    dc.send("hola");
+  };
+  
 }
 
 function onIceCandidate(pc, event) {
