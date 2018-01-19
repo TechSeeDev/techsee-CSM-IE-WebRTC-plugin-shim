@@ -66,19 +66,28 @@ async function runall (tests, out)
 			fs.appendFileSync (out, "<h1>" + test + "</h1>", trowError);
 			try {
 				const result = await run (driver, test);
-				//Check resutls
-				if (result.tests.status!=0)
-					throw status_text[result.tests.status] + (result.tests.message ? ": " + result.tests.message : "");
 				
 				//Acumulate
 				total += result.tests.total;
 				passed += result.tests.passed;
+				
 				//Add html to output
-				fs.appendFileSync (out, result.html, trowError);
-				//Log
-				process.stdout.clearLine ();
-				process.stdout.cursorTo (0);
-				process.stdout.write (style.color.green.open + figures.tick + style.color.close + " " + test + " [" + result.tests.passed + "/" + result.tests.total + "]\r\n");
+				fs.appendFileSync (out, result.html, trowError);			
+				
+				//Check resutls
+				if (result.tests.status==0)
+				{
+					//Log
+					process.stdout.clearLine ();
+					process.stdout.cursorTo (0);
+					process.stdout.write (style.color.green.open + figures.tick + style.color.close + " " + test + " [" + result.tests.passed + "/" + result.tests.total + "]\r\n");
+				} else {
+					//Log
+					process.stdout.clearLine ();
+					process.stdout.cursorTo (0);
+					var message = status_text[result.tests.status] + (result.tests.message ? ": " + result.tests.message : "");
+					process.stdout.write (style.color.red.open + figures.cross + style.color.close + " " + test + " (" + message + ") [" + result.tests.passed + "/" + result.tests.total + "]\r\n");
+				}
 			} catch (e) {
 				//Add html to output
 				fs.appendFileSync (out, e, trowError);

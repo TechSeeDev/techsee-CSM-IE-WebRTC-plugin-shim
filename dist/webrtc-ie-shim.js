@@ -1253,15 +1253,18 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 		if (!candidate) throw new TypeError();
 
 		//We dont't support signaling end of candidates
-		if (!candidate.candidate)
+		if (candidate.candidate === null)
 			//But we do not fail
 			return resolve();
 
 		//Reject with type error if no sdpMid and sdpMLineIndex
-		if (typeof candidate.sdpMLineIndex !== "number" && typeof candidate.sdpMLineIndex !== "number") throw new TypeError();
-
-		//Add ICE candidate nativelly
-		priv.pc.addIceCandidate(resolve, ThrowInvalidStateError, candidate);
+		if (typeof candidate.sdpMid !== "string" && typeof candidate.sdpMLineIndex !== "number") throw new TypeError();
+		try {
+			//Add ICE candidate nativelly
+			priv.pc.addIceCandidate(resolve, ThrowInvalidStateError, candidate);
+		} catch (e) {
+			throw new InvalidStateError();
+		}
 	});
 };
 

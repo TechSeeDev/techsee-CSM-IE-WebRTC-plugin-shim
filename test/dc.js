@@ -90,7 +90,6 @@ function call() {
     dc2 = event.channel;
     dc2.onmessage = function(event){
 	trace(event.data);
-
     };
   };
   dc1 = pc1.createDataChannel("test");
