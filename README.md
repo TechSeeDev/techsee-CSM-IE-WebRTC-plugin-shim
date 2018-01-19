@@ -6,7 +6,7 @@ WebRTC shim for IE based on the [CSM-IE-WebRTC-plugin](https://github.com/CoSMoS
 × datachannel-emptystring (Timeout) [0/1]
 √ getstats [0/1]
 √ historical [12/14]
-√ interfaces.https [0/1]
+√ interfaces.https [60/504]
 √ RTCCertificate [0/5]
 √ RTCConfiguration-bundlePolicy [3/15]
 √ RTCConfiguration-iceCandidatePoolSize [2/9]
@@ -80,7 +80,7 @@ WebRTC shim for IE based on the [CSM-IE-WebRTC-plugin](https://github.com/CoSMoS
 √ RTCSctpTransport-constructor [0/2]
 √ RTCSctpTransport-maxMessageSize [0/5]
 √ RTCTrackEvent-constructor [0/7]
-TOTAL [100/590]
+TOTAL [160/1093]
 ```
 
 ## Install and package

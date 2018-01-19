@@ -1,7 +1,9 @@
 <!doctype html>
 <meta charset="utf-8">
 <title>WebRTC IDL Tests</title>
-<script src="/resources/webrtc-ie-shim.js"></script><script src="/resources/testharness.js"></script>
+<script src="/resources/webrtc-ie-shim.js"></script>
+<script src="/resources/fetch.js"></script>
+<script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script src="/resources/WebIDLParser.js"></script>
 <script src="/resources/idlharness.js"></script>
@@ -47,6 +49,8 @@
     });
   }
   
+  if (!asyncInitCertificate.name) asyncInitCertificate.name = "asyncInitCertificate";
+  
   // Asynchronously generate instances of
   // RTCSctpTransport, RTCDtlsTransport,
   // and RTCIceTransport
@@ -75,6 +79,8 @@
     });
   }
   
+  if(!asyncInitTransports.name) asyncInitTransports.name = "asyncInitTransports";
+  
   // Asynchoronously generate MediaStreamTrack from getUserMedia
   function asyncInitMediaStreamTrack() {
     return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (mediaStream) {
@@ -84,6 +90,8 @@
       idlTestObjects.mediaStreamTrack = tracks[0];
     });
   }
+  
+  if(!asyncInitMediaStreamTrack.name) asyncInitMediaStreamTrack.name = "asyncInitMediaStreamTrack";
   
   // Run all async test drivers, report and swallow any error
   // thrown/rejected. Proper test for correct initialization
