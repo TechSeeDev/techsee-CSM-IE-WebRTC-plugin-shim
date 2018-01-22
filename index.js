@@ -8,13 +8,52 @@ if (browser.name === "ie")
 	var VideoRenderer		= require("./lib/VideoRenderer.js");
 	navigator.mediaDevices		= new MediaDevices();
 
-	window.RTCPeerConnection	= require("./lib/RTCPeerConnection.js");
-	window.RTCSessionDescription	= require("./lib/RTCSessionDescription.js");
-	window.RTCIceCandidate		= require("./lib/RTCIceCandidate.js");
-	window.MediaStream		= require("./lib/MediaStream.js");
-	window.MediaStreamTrack		= require("./lib/MediaStreamTrack.js");
-	window.Promise			= require("promise-polyfill");
+	var RTCPeerConnection		= require("./lib/RTCPeerConnection.js");
+	var RTCSessionDescription	= require("./lib/RTCSessionDescription.js");
+	var RTCIceCandidate		= require("./lib/RTCIceCandidate.js");
+	var RTCRtpTransceiver		= require("./lib/RTCRtpTransceiver.js");
+	var RTCRtpReceiver		= require("./lib/RTCRtpReceiver.js");
+	var RTCRtpSender		= require("./lib/RTCRtpSender.js");
+	var RTCDataChannel		= require("./lib/RTCDataChannel.js");
+	var MediaStream			= require("./lib/MediaStream.js");
+	var MediaStreamTrack		= require("./lib/MediaStreamTrack.js");
+	var Promise			= require("promise-polyfill");
+	var EventTarget			= require("./lib/EventTarget.js").EventTarget;
 
+
+	function makeInterface(Base) {
+		//Interface with no constructor
+		var Interface = function() {	throw new TypeError(); };
+		//Set name
+		Object.defineProperty(Interface, 'name'	, { enumerable: false, configurable: true, writable: false, value: Base.name });
+		//Create constructor and reset protocol chain
+		Interface.prototype = Object.create(Base.prototype, {
+			constructor: { 
+				value		: Interface, 
+				configurable	: true,
+				writable	: false 
+			}
+		});
+		//Fix protocol chain
+		Interface.__proto__ = Base.__proto__;
+		//Make prototype read only
+		Object.defineProperty(Interface, 'prototype'	, { writable:false });
+		//Ok
+		return Interface;
+	}
+
+	Object.defineProperty(window, 'RTCPeerConnection'	, { enumerable: false, configurable: true, writable: true, value: RTCPeerConnection	});
+	Object.defineProperty(window, 'RTCSessionDescription'	, { enumerable: false, configurable: true, writable: true, value: RTCSessionDescription });
+	Object.defineProperty(window, 'RTCIceCandidate'		, { enumerable: false, configurable: true, writable: true, value: RTCIceCandidate	});
+	Object.defineProperty(window, 'MediaStream'		, { enumerable: false, configurable: true, writable: true, value: MediaStream		});
+	Object.defineProperty(window, 'MediaStreamTrack'	, { enumerable: false, configurable: true, writable: true, value: makeInterface(MediaStreamTrack)	});
+	Object.defineProperty(window, 'RTCRtpTransceiver'	, { enumerable: false, configurable: true, writable: true, value: makeInterface(RTCRtpTransceiver)	});
+	Object.defineProperty(window, 'RTCRtpReceiver'		, { enumerable: false, configurable: true, writable: true, value: makeInterface(RTCRtpReceiver)		});
+	Object.defineProperty(window, 'RTCRtpSender'		, { enumerable: false, configurable: true, writable: true, value: makeInterface(MediaStreamTrack)	});
+	Object.defineProperty(window, 'RTCDataChannel'		, { enumerable: false, configurable: true, writable: true, value: makeInterface(RTCDataChannel)		});
+	Object.defineProperty(window, 'Promise'			, { enumerable: false, configurable: true, writable: true, value: Promise		});
+	Object.defineProperty(window, 'EventTarget'		, { enumerable: false, configurable: true, writable: true, value: EventTarget		});
+	
 
 	//Helper functions to check video nodes
 	function checkNewNode(node) 

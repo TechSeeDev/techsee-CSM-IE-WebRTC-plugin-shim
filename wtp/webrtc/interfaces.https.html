@@ -110,12 +110,13 @@
   }
   
   // Main function to do the IDL test, using fetched IDL text
-  function doIdlTest(idlText) {
+  function doIdlTest(idlTexts) {
     var idlArray = new IdlArray();
   
     idlArray.add_untested_idls('interface EventHandler {};');
+    idlArray.add_untested_idls(idlTexts[0]);
     idlArray.add_idls('interface MediaStreamTrack : EventTarget {};');
-    idlArray.add_idls(idlText);
+    idlArray.add_idls(idlTexts[1]);
   
     idlArray.add_objects({
       'RTCPeerConnection': ['new RTCPeerConnection()'],
@@ -161,9 +162,12 @@
   
   promise_test(function (t) {
     return asyncInit().then(function () {
-      return fetch('/interfaces/webrtc-pc.idl');
+      return Promise.all([
+	fetch('/interfaces/dom.idl'),
+	fetch('/interfaces/webrtc-pc.idl')]
+      );
     }).then(function (response) {
-      return response.text();
+      return Promise.all([response[0].text(),response[1].text()]);
     }).then(doIdlTest);
   }, 'Main test driver');
   
