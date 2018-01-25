@@ -1752,6 +1752,8 @@ module.exports = RTCIceCandidate;
 },{"./WebRTCProxy.js":17}],11:[function(require,module,exports){
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var WebRTCProxy = require("./WebRTCProxy.js");
 var MediaStreamTrack = require("./MediaStreamTrack.js");
 var RTCSessionDescription = require("./RTCSessionDescription.js");
@@ -1807,17 +1809,108 @@ interface RTCPeerConnection : EventTarget {
 	attribute EventHandler           onconnectionstatechange;
 };
 */
+
+var RTCIceTransportPolicy = ["relay", "all"];
+var RTCBundlePolicy = ["balanced", "max-compat", "max-bundle"];
+var RTCRtcpMuxPolicy = ["negotiate", "require"];
+var RTCIceCredentialType = ["password", "oauth"];
+
+//Check if a value is valid in an enum
+function check(value, valid) {
+	for (var i = 0; i < valid.length; ++i) {
+		if (valid[i] === value) return;
+	}throw new TypeError(value + " not in " + JSON.stringify(valid));
+}
+
+function checkRange(value, min, max) {
+	if (value < min || value > max) throw new TypeError(value + " not in [" + min + "," + max + "]");
+}
+
+function checkNotNull(value) {
+	if (value === null) throw new TypeError("Null not allowed");
+}
+
+function checkArray(value) {
+	if (!Array.isArray(value)) throw new TypeError("Must be an array");
+}
+
+function createRTCConfiguration(configuration) {
+	/*
+  *
+ dictionary RTCConfiguration {
+ 	sequence<RTCIceServer>   iceServers;
+ 	RTCIceTransportPolicy    iceTransportPolicy = "all";
+ 	RTCBundlePolicy          bundlePolicy = "balanced";
+ 	RTCRtcpMuxPolicy         rtcpMuxPolicy = "require";
+ 	DOMString                peerIdentity;
+ 	sequence<RTCCertificate> certificates;
+ 	[EnforceRange]
+ 	octet                    iceCandidatePoolSize = 0;
+ };  
+ */
+	//Set configuration with default values
+	var sanitized = _extends({
+		iceServers: undefined,
+		iceTransportPolicy: "all",
+		bundlePolicy: "balanced",
+		rtcpMuxPolicy: "require",
+		iceCandidatePoolSize: 0,
+		certificates: undefined
+	},
+	//Remove undefined objects
+	configuration ? JSON.parse(JSON.stringify(configuration)) : {});
+	//Check valid values
+	checkNotNull(sanitized.iceServers);
+
+	//Check array
+	if (Array.isArray(sanitized.iceServers)) {
+		//Check each one
+		for (var i = 0; i < sanitized.iceServers.length; ++i) {
+			/*
+    * 
+    dictionary RTCIceServer {
+   	required (DOMString or sequence<DOMString>) urls;
+   		 DOMString                          username;
+   		 (DOMString or RTCOAuthCredential)  credential;
+   		 RTCIceCredentialType               credentialType = "password";
+   };
+    */
+			//Set defautls
+			var iceServer = sanitized.iceServers[i] = _extends({
+				credentialType: "password"
+			}, sanitized.iceServers[i]);
+			//Check it is not null
+			checkNotNull(iceServer.urls);
+			//If it is a sring fallback
+			if (typeof iceServer.urls === "string")
+				//Arraify
+				iceServer.urls = [iceServer.urls];
+			checkArray(iceServer.urls);
+		}
+	}
+	//Check the others
+	check(sanitized.iceTransportPolicy, RTCIceTransportPolicy);
+	check(sanitized.bundlePolicy, RTCBundlePolicy);
+	check(sanitized.rtcpMuxPolicy, RTCRtcpMuxPolicy);
+	checkRange(sanitized.iceCandidatePoolSize, 0, 255);
+	//Done
+	return sanitized;
+}
+
 var RTCPeerConnection = function RTCPeerConnection() {
 	var self = this;
 	//Init event targetr
 	EventTarget.call(this);
 
-	//Create private arfs
+	//Create private args
 	var priv = this.priv = {};
 
+	//Set configuration with default values
+	priv.configuration = createRTCConfiguration(arguments.length ? JSON.parse(JSON.stringify(arguments[0])) : {});
+
+	//Other internal data
 	priv.senders = {};
 	priv.remoteStreams = {};
-	priv.configuration = arguments[0] || {};
 	priv.lastOffer = null;
 	priv.lastAnswer = null;
 	priv.isClosed = false;
@@ -2003,6 +2096,27 @@ defineEventAttribute(RTCPeerConnection.prototype, "addtrack");
 
 RTCPeerConnection.prototype.getConfiguration = function () {
 	return this.priv.configuration;
+};
+
+RTCPeerConnection.prototype.setConfiguration = function (configuration) {
+	var priv = this.priv;
+	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
+
+	//Get configuration object from input
+	var sanitized = createRTCConfiguration(configuration);
+
+	try {
+		//Try to set it
+		priv.pc.setConfiguration(sanitized);
+	} catch (error) {
+		//Launch InvalidModificationError
+		var operationError = new Error(error);
+		operationError.name = "InvalidModificationError";
+		operationError.code = 13;
+		throw operationError;
+	}
+	//Store new configuration
+	priv.configuration = sanitized;
 };
 
 RTCPeerConnection.getDefaultIceServers = function () {
