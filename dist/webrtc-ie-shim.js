@@ -258,7 +258,6 @@ if (browser.name === "ie") {
 			}
 		});
 		//Fix protocol chain
-		Interface.prototype = Base.__proto__;
 		Interface.__proto__ = Base.__proto__;
 		//Make prototype read only
 		Object.defineProperty(Interface, 'prototype', { writable: false });
@@ -1113,6 +1112,7 @@ module.exports = InvalidStateError;
 
 var WebRTCProxy = require("./WebRTCProxy.js");
 var MediaStream = require("./MediaStream.js");
+var MediaStreamTrack = require("./MediaStreamTrack.js");
 var Promise = require("promise-polyfill");
 var EventTarget = require("./EventTarget.js").EventTarget;
 var defineEventAttribute = require("./EventTarget.js").defineEventAttribute;
@@ -1185,7 +1185,7 @@ Object.defineProperty(MediaDevices, 'name', { enumerable: false, configurable: t
 Object.defineProperty(MediaDevices, 'prototype', { writable: false });
 module.exports = MediaDevices;
 
-},{"./EventTarget.js":4,"./MediaStream.js":7,"./WebRTCProxy.js":17,"promise-polyfill":19}],7:[function(require,module,exports){
+},{"./EventTarget.js":4,"./MediaStream.js":7,"./MediaStreamTrack.js":8,"./WebRTCProxy.js":17,"promise-polyfill":19}],7:[function(require,module,exports){
 "use strict";
 
 var EventTarget = require("./EventTarget.js").EventTarget;
@@ -1239,6 +1239,7 @@ MediaStream.prototype = Object.create(EventTarget.prototype, {
 		writable: true
 	}
 });
+MediaStream.__proto__ = EventTarget;
 
 // Define Event Handlers
 defineEventAttribute(MediaStream.prototype, "addtrack");
@@ -1564,6 +1565,7 @@ RTCDataChannel.prototype = Object.create(EventTarget.prototype, {
 		writable: true
 	}
 });
+RTCDataChannel.__proto__ = EventTarget;
 
 // Define Event Handlers
 defineEventAttribute(RTCDataChannel.prototype, "open");
@@ -1751,6 +1753,7 @@ module.exports = RTCIceCandidate;
 "use strict";
 
 var WebRTCProxy = require("./WebRTCProxy.js");
+var MediaStreamTrack = require("./MediaStreamTrack.js");
 var RTCSessionDescription = require("./RTCSessionDescription.js");
 var RTCIceCandidate = require("./RTCIceCandidate.js");
 var RTCRtpSender = require("./RTCRtpSender.js");
@@ -1986,6 +1989,7 @@ RTCPeerConnection.prototype = Object.create(EventTarget.prototype, {
 		writable: true
 	}
 });
+RTCPeerConnection.__proto__ = EventTarget;
 
 // Define Event Handlers
 defineEventAttribute(RTCPeerConnection.prototype, "negotiationneeded");
@@ -2244,7 +2248,7 @@ Object.defineProperty(RTCPeerConnection, 'RTCPeerConnection', { enumerable: fals
 Object.defineProperty(RTCPeerConnection, 'prototype', { writable: false });
 module.exports = RTCPeerConnection;
 
-},{"./EventTarget.js":4,"./InvalidStateError.js":5,"./RTCDataChannel.js":9,"./RTCIceCandidate.js":10,"./RTCRtpReceiver.js":12,"./RTCRtpSender.js":13,"./RTCRtpTransceiver.js":14,"./RTCSessionDescription.js":15,"./WebRTCProxy.js":17,"promise-polyfill":19}],12:[function(require,module,exports){
+},{"./EventTarget.js":4,"./InvalidStateError.js":5,"./MediaStreamTrack.js":8,"./RTCDataChannel.js":9,"./RTCIceCandidate.js":10,"./RTCRtpReceiver.js":12,"./RTCRtpSender.js":13,"./RTCRtpTransceiver.js":14,"./RTCSessionDescription.js":15,"./WebRTCProxy.js":17,"promise-polyfill":19}],12:[function(require,module,exports){
 "use strict";
 
 var Promise = require("promise-polyfill");

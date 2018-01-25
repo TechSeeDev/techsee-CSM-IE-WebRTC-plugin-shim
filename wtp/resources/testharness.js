@@ -2932,7 +2932,7 @@ policies and contribution forms [3].
     addEventListener("error", error_handler, false);
     addEventListener("unhandledrejection", function(e){ error_handler(e.reason); }, false);
 
-    test_environment.on_tests_ready();
+    //test_environment.on_tests_ready();
 
 })();
 // vim: set expandtab shiftwidth=4 tabstop=4:
