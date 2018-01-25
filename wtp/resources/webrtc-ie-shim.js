@@ -1767,10 +1767,6 @@ var InvalidStateError = require("./InvalidStateError.js");
 var EventTarget = require("./EventTarget.js").EventTarget;
 var defineEventAttribute = require("./EventTarget.js").defineEventAttribute;
 
-function ThrowInvalidStateError() {
-	throw new InvalidStateError();
-};
-
 /*
 [Constructor(optional RTCConfiguration configuration),Exposed=Window]
 interface RTCPeerConnection : EventTarget {
@@ -2130,26 +2126,32 @@ RTCPeerConnection.prototype.createOffer = function (options) {
 		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 		priv.pc.createOffer(function (type, sdp) {
 			priv.lastOffer = sdp;
-			resolve(new RTCSessionDescription({
+			resolve({
 				type: type,
 				sdp: sdp
-			}));
-		}, reject, options);
+			});
+		}, function () {
+			reject(new InvalidStateError());
+		}, options);
 	});
 };
 
 RTCPeerConnection.prototype.createAnswer = function (options) {
+	var self = this;
 	var priv = this.priv;
 
 	return new Promise(function (resolve, reject) {
 		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
+		if (self.remoteDescription === null) throw new InvalidStateError();
 		priv.pc.createAnswer(function (type, sdp) {
 			priv.lastAnswer = sdp;
-			resolve(new RTCSessionDescription({
+			resolve({
 				type: type,
 				sdp: sdp
-			}));
-		}, reject, options);
+			});
+		}, function () {
+			reject(new InvalidStateError());
+		}, options);
 	});
 };
 
@@ -2164,7 +2166,9 @@ RTCPeerConnection.prototype.setLocalDescription = function (description) {
 
 	return new Promise(function (resolve, reject) {
 		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
-		priv.pc.setLocalDescription(resolve, reject, description);
+		priv.pc.setLocalDescription(resolve, function () {
+			reject(new InvalidStateError());
+		}, description);
 	});
 };
 
@@ -2173,7 +2177,9 @@ RTCPeerConnection.prototype.setRemoteDescription = function (description) {
 
 	return new Promise(function (resolve, reject) {
 		if (!priv.pc || priv.isClosed) throw new InvalidStateError();
-		priv.pc.setRemoteDescription(resolve, reject, description);
+		priv.pc.setRemoteDescription(resolve, function () {
+			reject(new InvalidStateError());
+		}, description);
 	});
 };
 
@@ -2186,7 +2192,7 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 	if (!candidate || typeof candidate.sdpMid !== "string" && typeof candidate.sdpMLineIndex !== "number") return Promise.reject(new TypeError());
 
 	//4.  Return the result of [enqueuing](#enqueue-an-operation) the following steps to connection's operation queue:
-	return new Promise(function (resolve) {
+	return new Promise(function (resolve, reject) {
 		//1.  If ``[`remoteDescription`](#dom-rtcpeerconnection-remotedescription)`` is `null` return a promise [rejected](#dfn-rejected) with a newly [created](https://www.w3.org/TR/2016/REC-WebIDL-1-20161215/#dfn-create-exception) `InvalidStateError`.
 		if (self.remoteDescription === null) throw new InvalidStateError();
 
@@ -2210,7 +2216,9 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
   */
 		try {
 			//Add ICE candidate nativelly
-			priv.pc.addIceCandidate(resolve, ThrowInvalidStateError, candidate);
+			priv.pc.addIceCandidate(resolve, function () {
+				reject(new InvalidStateError());
+			}, candidate);
 		} catch (error) {
 			//Launch operation error
 			var operationError = new Error(error);
@@ -2227,6 +2235,8 @@ RTCPeerConnection.prototype.close = function () {
 	if (!priv.pc || priv.isClosed) throw new InvalidStateError();
 	//Close it
 	priv.pc.close();
+	//We are closed now, we can wait until callback
+	priv.isClosed = true;
 };
 /*
 partial interface RTCPeerConnection {
