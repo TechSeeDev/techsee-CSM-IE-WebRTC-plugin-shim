@@ -70,7 +70,7 @@ for (let name in merged)
 		const results = page.results[test];
 		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefox) + "|"  +  result(results.dege) + "|\r\n" ;
 	}
-	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total+ "|" + page.passed.edge  + "/" + page.total + +"|\r\n";
+	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total+ "|" + page.passed.edge  + "/" + page.total + "|\r\n";
 	markdown += "|||||||\r\n";
 	total += page.total;
 	ie += page.passed.ie;
