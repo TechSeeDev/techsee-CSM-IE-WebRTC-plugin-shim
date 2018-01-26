@@ -66,7 +66,7 @@ for (let name in merged)
 	for (let test in page.results)
 	{
 		const results = page.results[test];
-		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefos) + "|\r\n" ;
+		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefox) + "|\r\n" ;
 	}
 	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total + "|\r\n";
 	total += page.total;
