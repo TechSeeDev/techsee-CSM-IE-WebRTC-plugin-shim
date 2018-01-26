@@ -17,10 +17,11 @@ async function run (driver, test)
 			if (results.tests[i].status === 0)
 				passed++;
 		return {
-			total : total,
-			passed : passed,
-			status : results.status,
-			message : results.message
+			total   : total,
+			passed  : passed,
+			status  : results.status,
+			message : results.message,
+			tests   : results.tests
 		};
 	});
 	var html = await driver.executeScript ("return log.outerHTML;");
@@ -48,16 +49,22 @@ var status_text = {};
     status_text[TEST_STATUSES.TIMEOUT] = "Timeout";
     status_text[TEST_STATUSES.NOTRUN] = "Not Run";
 
-async function runall (tests, out)
+async function runall (tests, browser)
 {
+	//Create filenames
+	const out  = browser + ".html";
+	const json = browser + ".json";
 
+	//Write html header
 	fs.writeFileSync (out, '<html><head><link rel="stylesheet" href="https://cdn.rawgit.com/w3c/web-platform-tests/03bbca89/resources/testharness.css"></head><body>', trowError);
 
 	//Create driver
-	const driver = await new Builder ().forBrowser ('internet explorer').build ();
+	const driver = await new Builder ().forBrowser (browser).build ();
 
 	let total = 0;
 	let passed = 0;
+	let results = {};
+	
 	try {
 		for (let i = 0; i < tests.length; ++i)
 		{
@@ -68,6 +75,7 @@ async function runall (tests, out)
 				const result = await run (driver, test);
 				
 				//Acumulate
+				results[test] = result.tests;
 				total += result.tests.total;
 				passed += result.tests.passed;
 				
@@ -102,7 +110,10 @@ async function runall (tests, out)
 	} finally {
 		driver.quit ();
 	}
+	//Write html footer
 	fs.appendFileSync (out, '</body></html>', trowError);
+	//Write json
+	fs.writeFileSync (json, JSON.stringify(results), trowError);
 	//Log
 	process.stdout.write (style.color.green.open + "TOTAL [" + passed + "/" + total + "]\r\n"+ style.color.close);
 	//Terminate
@@ -121,7 +132,15 @@ fs.readdirSync (www + "/webrtc")
 		file.match (/\.html$/) && tests.push (file.replace (".html", ""));
 	});
 
+//Default
+let browser = 'internet explorer';
+
+//Check 
+if (process.argv.length==3)
+	 //Get it
+	browser = process.argv[2];
+
 //Run all test 
-runall (tests, "out.html");
+runall (tests, browser);
 
 
