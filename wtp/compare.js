@@ -45,7 +45,7 @@ for (let browser in results)
 	}
 }
 
-let markdown = "# Web Platform test results";
+let markdown = "# Web Platform test results\r\n";
 
 markdown += "||Test|IE|Chrome|Firefox|\r\n";
 markdown += "|---|---|---|---|---|\r\n";

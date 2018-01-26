@@ -1,4 +1,5 @@
-# Web Platform test results||Test|IE|Chrome|Firefox|
+# Web Platform test results
+||Test|IE|Chrome|Firefox|
 |---|---|---|---|---|
 |:hammer:| **datachannel-emptystring**||||
 ||Can send empty strings across a WebRTC data channel.|:white_check_mark:|:white_check_mark:|:x:|
