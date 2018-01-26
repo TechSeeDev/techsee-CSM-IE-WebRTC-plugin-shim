@@ -79,7 +79,7 @@ for (let name in merged)
 	edge += page.passed.edge;
 }
 
-markdown += "||`Totals` |" + ie + "/" + total + "|" + chrome  + "/" + total + "|" + firefox  + "/" + total + "|" + edge  + "/" + total + "|\r\n";
+markdown += "||`Total  " + total + "` |" + ie + "|" + chrome + "|" + firefox  + total + "|" + edge  + "|\r\n";
 
 //Write html header
 fs.writeFileSync ("tests_results.md", markdown);

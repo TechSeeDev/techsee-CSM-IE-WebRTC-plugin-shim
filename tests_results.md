@@ -1343,4 +1343,4 @@
 ||Can set up a basic WebRTC call.|:x:|:x:|:white_check_mark:|:x:|
 ||`Test Total` |0/1|0/1|1/1|0/1|
 |||||||
-||`Totals` |270/1099|360/1099|394/1099|99/1099|
+||`Total  1099` |270|360|3941099|99|
