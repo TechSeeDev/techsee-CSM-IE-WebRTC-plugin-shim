@@ -52,7 +52,7 @@ markdown += "|---|---|---|---|---|\r\n";
 
 function result(status)
 {
-	return status===1 ? ":white_check_mark:" : ":x:";
+	return status===0 ? ":white_check_mark:" : ":x:";
 }
 let total = 0;
 let ie = 0;
