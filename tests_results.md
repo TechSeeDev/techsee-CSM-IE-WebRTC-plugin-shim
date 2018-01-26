@@ -4,9 +4,11 @@
 |:hammer:| **datachannel-emptystring**||||
 ||Can send empty strings across a WebRTC data channel.|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **getstats**||||
 ||Can get stats from a basic WebRTC call.|:x:|:white_check_mark:|:x:|
 ||`Test Total` |0/1|1/1|0/1|
+||||||
 |:hammer:| **historical**||||
 ||RTCDataChannel member reliable should not exist|:white_check_mark:|:x:|:x:|
 ||RTCPeerConnection member addStream should not exist|:x:|:x:|:x:|
@@ -23,6 +25,7 @@
 ||mozRTCSessionDescription interface should not exist|:white_check_mark:|:white_check_mark:|:x:|
 ||webkitRTCPeerConnection interface should not exist|:white_check_mark:|:x:|:white_check_mark:|
 ||`Test Total` |13/14|5/14|5/14|
+||||||
 |:hammer:| **interfaces.https**||||
 ||Main test driver|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Test driver for asyncInitCertificate|:x:|:white_check_mark:|:white_check_mark:|
@@ -532,12 +535,15 @@
 ||Stringification of new RTCDataChannelEvent('channel',        { channel: new RTCPeerConnection().createDataChannel('') })|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCDataChannelEvent interface: new RTCDataChannelEvent('channel',        { channel: new RTCPeerConnection().createDataChannel('') }) must inherit property "channel" with the proper type|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |82/504|201/504|221/504|
+||||||
 |:hammer:| **no-media-call**||||
 ||Can set up a basic WebRTC call with no data.|:x:|:white_check_mark:|:x:|
 ||`Test Total` |0/1|1/1|0/1|
+||||||
 |:hammer:| **promises-call**||||
 ||Can set up a basic WebRTC call with only data using promises.|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |1/1|1/1|1/1|
+||||||
 |:hammer:| **RTCCertificate**||||
 ||Constructing RTCPeerConnection with expired certificate should reject with InvalidAccessError|:x:|:white_check_mark:|:x:|
 ||Calling setConfiguration with different set of certs should reject with InvalidModificationError|:x:|:white_check_mark:|:x:|
@@ -545,6 +551,7 @@
 ||RTCPeerConnection({ certificates }) should generate offer SDP with fingerprint of provided certificate|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection({ certificates }) should generate offer SDP with fingerprint of all provided certificates|:x:|:x:|:x:|
 ||`Test Total` |0/5|4/5|0/5|
+||||||
 |:hammer:| **RTCConfiguration-bundlePolicy**||||
 ||Default bundlePolicy should be balanced|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection({ bundlePolicy: undefined }) should have bundlePolicy balanced|:white_check_mark:|:x:|:white_check_mark:|
@@ -562,6 +569,7 @@
 ||setConfiguration({ bundlePolicy: 'max-compat' }) with initial bundlePolicy max-bundle should throw InvalidModificationError|:x:|:white_check_mark:|:x:|
 ||setConfiguration({}) with initial bundlePolicy max-bundle should throw InvalidModificationError|:x:|:white_check_mark:|:x:|
 ||`Test Total` |13/15|10/15|7/15|
+||||||
 |:hammer:| **RTCConfiguration-iceCandidatePoolSize**||||
 ||Initialize a new RTCPeerConnection with no iceCandidatePoolSize|:white_check_mark:|:x:|:x:|
 ||Initialize a new RTCPeerConnection with iceCandidatePoolSize: 0|:white_check_mark:|:x:|:x:|
@@ -573,6 +581,7 @@
 ||Reconfigure RTCPeerConnection instance iceCandidatePoolSize to -1 (Out Of Range)|:white_check_mark:|:white_check_mark:|:x:|
 ||Reconfigure RTCPeerConnection instance iceCandidatePoolSize to 256 (Out Of Range)|:white_check_mark:|:white_check_mark:|:x:|
 ||`Test Total` |9/9|4/9|0/9|
+||||||
 |:hammer:| **RTCConfiguration-iceServers**||||
 ||new RTCPeerConnection() should have default configuration.iceServers of undefined|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - { iceServers: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:white_check_mark:|
@@ -652,6 +661,7 @@
 ||new RTCPeerConnection(config) - with empty urls list, credentialType password, and RTCOAuthCredential credential should succeed|:x:|:x:|:x:|
 ||setConfiguration(config) - with empty urls list, credentialType password, and RTCOAuthCredential credential should succeed|:x:|:x:|:x:|
 ||`Test Total` |28/77|24/77|24/77|
+||||||
 |:hammer:| **RTCConfiguration-iceTransportPolicy**||||
 ||new RTCPeerConnection() should have default iceTransportPolicy all|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection({ iceTransportPolicy: undefined }) should have default iceTransportPolicy all|:white_check_mark:|:x:|:white_check_mark:|
@@ -670,6 +680,7 @@
 ||new RTCPeerConnection({ iceTransports: 'invalid' }) should have no effect|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection({ iceTransports: null }) should have no effect|:white_check_mark:|:x:|:white_check_mark:|
 ||`Test Total` |16/16|6/16|10/16|
+||||||
 |:hammer:| **RTCConfiguration-rtcpMuxPolicy**||||
 ||new RTCPeerConnection() should have default rtcpMuxPolicy require|:white_check_mark:|:x:|:x:|
 ||new RTCPeerConnection({ rtcpMuxPolicy: undefined }) should have default rtcpMuxPolicy require|:white_check_mark:|:x:|:x:|
@@ -683,16 +694,19 @@
 ||setConfiguration({ rtcpMuxPolicy: 'require' }) with initial rtcpMuxPolicy negotiate should throw InvalidModificationError|:x:|:white_check_mark:|:x:|
 ||setConfiguration({}) with initial rtcpMuxPolicy negotiate should throw InvalidModificationError|:x:|:white_check_mark:|:x:|
 ||`Test Total` |8/11|7/11|0/11|
+||||||
 |:hammer:| **RTCDataChannel-bufferedAmount**||||
 ||bufferedAmount should increase to byte length of encoded unicode string sent|:x:|:x:|:x:|
 ||bufferedAmount should increase to byte length of buffer sent|:x:|:x:|:x:|
 ||bufferedAmount should increase to size of blob sent|:x:|:x:|:x:|
 ||bufferedAmount should increase by byte length for each message sent|:x:|:x:|:x:|
 ||`Test Total` |0/4|0/4|0/4|
+||||||
 |:hammer:| **RTCDataChannel-id**||||
 ||DTLS client uses odd data channel IDs|:white_check_mark:|:white_check_mark:|:x:|
 ||DTLS server uses even data channel IDs|:white_check_mark:|:white_check_mark:|:x:|
 ||`Test Total` |2/2|2/2|0/2|
+||||||
 |:hammer:| **RTCDataChannel-send**||||
 ||Calling send() when data channel is in connecting state should throw InvalidStateError|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Data channel should be able to send simple string and receive as string|:white_check_mark:|:white_check_mark:|:white_check_mark:|
@@ -705,15 +719,18 @@
 ||Data channel binaryType should receive message as Blob by default|:x:|:x:|:white_check_mark:|
 ||Sending multiple messages with different types should succeed and be received|:x:|:x:|:white_check_mark:|
 ||`Test Total` |3/10|6/10|10/10|
+||||||
 |:hammer:| **RTCDataChannelEvent-constructor**||||
 ||RTCDataChannelEvent constructor without a required argument.|:x:|:white_check_mark:|:x:|
 ||RTCDataChannelEvent constructor with channel passed as null.|:x:|:white_check_mark:|:x:|
 ||RTCDataChannelEvent constructor with a channel passed as undefined.|:x:|:white_check_mark:|:x:|
 ||RTCDataChannelEvent constructor with full arguments.|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |0/4|4/4|1/4|
+||||||
 |:hammer:| **RTCDtlsTransport-getRemoteCertificates**||||
 ||RTCDtlsTransport.prototype.getRemoteCertificates|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCDTMFSender-insertDTMF.https**||||
 ||insertDTMF() should succeed if tones contains valid DTMF characters|:x:|:x:|:white_check_mark:|
 ||insertDTMF() should throw InvalidCharacterError if tones contains invalid DTMF characters|:x:|:x:|:white_check_mark:|
@@ -722,9 +739,11 @@
 ||insertDTMF() should throw InvalidStateError if transceiver.currentDirection is inactive|:x:|:x:|:x:|
 ||insertDTMF() should set toneBuffer to provided tones normalized, with old tones overridden|:x:|:x:|:white_check_mark:|
 ||`Test Total` |0/6|0/6|3/6|
+||||||
 |:hammer:| **RTCDTMFSender-ontonechange-long.https**||||
 ||insertDTMF with duration greater than 6000 should be clamped to 6000|:x:|:x:|:white_check_mark:|
 ||`Test Total` |0/1|0/1|1/1|
+||||||
 |:hammer:| **RTCDTMFSender-ontonechange.https**||||
 ||insertDTMF() with default duration and intertoneGap should fire tonechange events at the expected time|:x:|:x:|:x:|
 ||insertDTMF() with explicit duration and intertoneGap should fire tonechange events at the expected time|:x:|:x:|:x:|
@@ -738,6 +757,7 @@
 ||Calling insertDTMF('') in the middle of tonechange events should stop future tonechange events from firing|:x:|:x:|:x:|
 ||Setting transceiver.currentDirection to recvonly in the middle of tonechange events should stop future tonechange events from firing|:x:|:x:|:x:|
 ||`Test Total` |0/11|0/11|5/11|
+||||||
 |:hammer:| **RTCIceCandidate-constructor**||||
 ||new RTCIceCandidate()|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||new RTCIceCandidate({})|:white_check_mark:|:x:|:white_check_mark:|
@@ -757,10 +777,12 @@
 ||new RTCIceCandidate({ ... }) with invalid sdpMid|:x:|:x:|:x:|
 ||new RTCIceCandidate({ ... }) with invalid sdpMLineIndex|:x:|:x:|:x:|
 ||`Test Total` |6/17|1/17|3/17|
+||||||
 |:hammer:| **RTCIceTransport**||||
 ||Two connected iceTransports should has matching local/remote candidates returned|:x:|:x:|:x:|
 ||Unconnected iceTransport should have empty remote candidates and selected pair|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCPeerConnection-addIceCandidate**||||
 ||Add null candidate should reject with TypeError|:white_check_mark:|:white_check_mark:|:x:|
 ||Add ICE candidate before setting remote description should reject with InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
@@ -786,6 +808,7 @@
 ||Add candidate with invalid candidate string should reject with OperationError|:x:|:white_check_mark:|:x:|
 ||Add candidate with sdpMid belonging to different ufrag should reject with OperationError|:x:|:x:|:x:|
 ||`Test Total` |14/23|13/23|13/23|
+||||||
 |:hammer:| **RTCPeerConnection-addTrack.https**||||
 ||addTrack when pc is closed should throw InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
 ||addTrack with single track argument and no mediaStream should succeed|:x:|:x:|:x:|
@@ -796,6 +819,7 @@
 ||addTrack with existing sender with null track, same kind, and sendrecv direction should create new sender|:x:|:x:|:x:|
 ||addTrack with existing sender with null track, different kind, and recvonly direction should create new sender|:x:|:x:|:x:|
 ||`Test Total` |1/8|0/8|3/8|
+||||||
 |:hammer:| **RTCPeerConnection-addTransceiver**||||
 ||addTransceiver() with string argument as invalid kind should throw TypeError|:white_check_mark:|:x:|:x:|
 ||addTransceiver('audio') should return an audio transceiver|:x:|:x:|:x:|
@@ -813,15 +837,18 @@
 ||addTransceiver() with readonly fec set should throw InvalidAccessError|:x:|:x:|:x:|
 ||addTransceiver() with valid sendEncodings should succeed|:x:|:x:|:x:|
 ||`Test Total` |4/15|0/15|0/15|
+||||||
 |:hammer:| **RTCPeerConnection-canTrickleIceCandidates**||||
 ||canTrickleIceCandidates property is null prior to setRemoteDescription|:white_check_mark:|:x:|:white_check_mark:|
 ||canTrickleIceCandidates property is true after setRemoteDescription with a=ice-options:trickle|:x:|:x:|:white_check_mark:|
 ||canTrickleIceCandidates property is false after setRemoteDescription without a=ice-options:trickle|:x:|:x:|:white_check_mark:|
 ||`Test Total` |1/3|0/3|3/3|
+||||||
 |:hammer:| **RTCPeerConnection-connectionState**||||
 ||Initial connectionState should be new|:white_check_mark:|:x:|:x:|
 ||connection with one data channel should eventually have connected connection state|:x:|:x:|:x:|
 ||`Test Total` |1/2|0/2|0/2|
+||||||
 |:hammer:| **RTCPeerConnection-constructor**||||
 ||RTCPeerConnection.length|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||new RTCPeerConnection()|:white_check_mark:|:white_check_mark:|:white_check_mark:|
@@ -846,11 +873,13 @@
 ||connectionState initial value|:white_check_mark:|:x:|:x:|
 ||canTrickleIceCandidates initial value|:white_check_mark:|:x:|:white_check_mark:|
 ||`Test Total` |17/22|13/22|21/22|
+||||||
 |:hammer:| **RTCPeerConnection-createAnswer**||||
 ||createAnswer() with null remoteDescription should reject with InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
 ||createAnswer() after setting remote description should succeed|:white_check_mark:|:x:|:white_check_mark:|
 ||createAnswer() when connection is closed reject with InvalidStateError|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |3/3|1/3|3/3|
+||||||
 |:hammer:| **RTCPeerConnection-createDataChannel**||||
 ||createDataChannel with no argument should throw TypeError|:x:|:white_check_mark:|:white_check_mark:|
 ||createDataChannel with closed connection should throw InvalidStateError|:x:|:white_check_mark:|:white_check_mark:|
@@ -883,6 +912,7 @@
 ||createDataChannel with negotiated true and long label and long protocol should succeed|:x:|:x:|:x:|
 ||Channels created after SCTP transport is established should have id assigned|:x:|:x:|:x:|
 ||`Test Total` |3/30|14/30|11/30|
+||||||
 |:hammer:| **RTCPeerConnection-createOffer-offerToReceive**||||
 ||createOffer() with offerToReceiveAudio set to false should not create a transceiver|:x:|:x:|:x:|
 ||createOffer() with offerToReceiveAudio should create a "recvonly" transceiver|:x:|:x:|:x:|
@@ -900,6 +930,7 @@
 ||subsequent offerToReceiveVideo set to false with a track should change the direction to "sendonly"|:x:|:x:|:x:|
 ||offerToReceiveAudio and Video should create two "recvonly" transceivers|:x:|:x:|:x:|
 ||`Test Total` |0/15|0/15|0/15|
+||||||
 |:hammer:| **RTCPeerConnection-createOffer**||||
 ||createOffer() with no argument from newly created RTCPeerConnection should succeed|:white_check_mark:|:x:|:x:|
 ||createOffer() and then setLocalDescription() should succeed|:white_check_mark:|:x:|:white_check_mark:|
@@ -910,6 +941,7 @@
 ||createOffer() with offerToReceiveAudio:true then offerToReceiveVideo:true should have result offer with both audio and video line|:x:|:x:|:x:|
 ||Test onsignalingstatechange event for createOffer() and then setLocalDescription() should succeed|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |4/8|2/8|3/8|
+||||||
 |:hammer:| **RTCPeerConnection-generateCertificate**||||
 ||generateCertificate() with compulsary RSASSA-PKCS1-v1_5 parameters should succeed|:x:|:white_check_mark:|:white_check_mark:|
 ||generateCertificate() with compulsary ECDSA parameters should succeed|:x:|:white_check_mark:|:white_check_mark:|
@@ -920,9 +952,11 @@
 ||generateCertificate() with invalid range for expires should reject with TypeError|:x:|:x:|:white_check_mark:|
 ||generateCertificate() with invalid type for expires should reject with TypeError|:x:|:x:|:white_check_mark:|
 ||`Test Total` |0/8|6/8|6/8|
+||||||
 |:hammer:| **RTCPeerConnection-getDefaultIceServers**||||
 ||RTCPeerConnection.getDefaultIceServers() should return array of RTCIceServer|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCPeerConnection-getIdentityAssertion**||||
 ||getIdentityAssertion() should load IdP proxy and return assertion generated|:x:|:x:|:x:|
 ||getIdentityAssertion() should succeed if mock-idp.js return different domain and protocol in assertion|:x:|:x:|:x:|
@@ -937,6 +971,7 @@
 ||createOffer() should reject with NotReadableError if identitity assertion request fails|:x:|:x:|:x:|
 ||createAnswer() should reject with NotReadableError if identitity assertion request fails|:x:|:x:|:x:|
 ||`Test Total` |0/12|0/12|0/12|
+||||||
 |:hammer:| **RTCPeerConnection-getStats.https**||||
 ||getStats() with no argument should succeed|:x:|:white_check_mark:|:white_check_mark:|
 ||getStats(null) should succeed|:x:|:x:|:white_check_mark:|
@@ -952,23 +987,28 @@
 ||getStats() on track associated with RtpReceiver should return stats report containing inbound-rtp stats|:x:|:x:|:x:|
 ||getStats() with connected peer connections having tracks and data channel should return all mandatory to implement stats|:x:|:x:|:x:|
 ||`Test Total` |0/13|2/13|3/13|
+||||||
 |:hammer:| **RTCPeerConnection-getTransceivers**||||
 ||Initial peer connection should have list of zero senders, receivers and transceivers|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCPeerConnection-iceConnectionState**||||
 ||Initial iceConnectionState should be new|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||connection with one data channel should eventually have connected connection state|:x:|:x:|:x:|
 ||`Test Total` |1/2|1/2|1/2|
+||||||
 |:hammer:| **RTCPeerConnection-iceGatheringState**||||
 ||Initial iceGatheringState should be new|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||iceGatheringState should eventually become complete after setLocalDescription|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||connection with one data channel should eventually have connected connection state|:x:|:x:|:x:|
 ||`Test Total` |2/3|2/3|2/3|
+||||||
 |:hammer:| **RTCPeerConnection-ondatachannel**||||
 ||datachannel event should fire when new data channel is announced to the remote peer|:x:|:white_check_mark:|:x:|
 ||Data channel created on remote peer should match the same configuration as local peer|:x:|:x:|:x:|
 ||Data channel created with negotiated set to true should not fire datachannel event on remote peer|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |0/3|2/3|1/3|
+||||||
 |:hammer:| **RTCPeerConnection-onnegotiationneeded**||||
 ||Creating first data channel should fire negotiationneeded event|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||calling createDataChannel twice should fire negotiationneeded event once|:white_check_mark:|:white_check_mark:|:white_check_mark:|
@@ -978,6 +1018,7 @@
 ||negotiationneeded event should not fire if signaling state is not stable|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||negotiationneeded event should fire only after signaling state go back to stable|:x:|:x:|:x:|
 ||`Test Total` |3/7|3/7|3/7|
+||||||
 |:hammer:| **RTCPeerConnection-ontrack.https**||||
 ||setRemoteDescription should trigger ontrack event when the MSID of the stream is is parsed.|:x:|:x:|:x:|
 ||setRemoteDescription() with m= line of recvonly direction should not trigger track event|:white_check_mark:|:x:|:white_check_mark:|
@@ -985,6 +1026,7 @@
 ||addTransceiver('video') should cause remote connection to fire ontrack when setRemoteDescription()|:x:|:x:|:x:|
 ||addTransceiver() with inactive direction should not cause remote connection to fire ontrack when setRemoteDescription()|:x:|:x:|:x:|
 ||`Test Total` |1/5|0/5|1/5|
+||||||
 |:hammer:| **RTCPeerConnection-peerIdentity**||||
 ||setRemoteDescription() on offer with a=identity should establish peerIdentity|:x:|:x:|:x:|
 ||setRemoteDescription() on offer with a=identity that resolve to value different from target peer identity should reject with InvalidModificationError|:x:|:x:|:x:|
@@ -993,6 +1035,7 @@
 ||When IdP throws error and pc has target peer identity, setRemoteDescription() and peerIdentity rejected with RTCError('idp-execution-error')|:x:|:x:|:x:|
 ||IdP failure with no target peer identity should have following setRemoteDescription() succeed and replace pc.peerIdentity with a new promise|:x:|:x:|:x:|
 ||`Test Total` |0/6|0/6|0/6|
+||||||
 |:hammer:| **RTCPeerConnection-removeTrack.https**||||
 ||addTransceiver - Calling removeTrack when connection is closed should throw InvalidStateError|:x:|:x:|:x:|
 ||addTrack - Calling removeTrack when connection is closed should throw InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
@@ -1007,6 +1050,7 @@
 ||Calling removeTrack with currentDirection recvonly should not change direction|:x:|:x:|:x:|
 ||Calling removeTrack with currentDirection inactive should not change direction|:x:|:x:|:x:|
 ||`Test Total` |2/12|0/12|2/12|
+||||||
 |:hammer:| **RTCPeerConnection-setDescription-transceiver**||||
 ||setLocalDescription(offer) with m= section should assign mid to corresponding transceiver|:x:|:x:|:x:|
 ||setRemoteDescription(offer) with m= section and no existing transceiver should create corresponding transceiver|:x:|:x:|:x:|
@@ -1014,6 +1058,7 @@
 ||setLocalDescription(rollback) should only unset transceiver mids associated with current round|:x:|:x:|:x:|
 ||setRemoteDescription(rollback) should remove newly created transceiver from transceiver list|:x:|:x:|:x:|
 ||`Test Total` |0/5|0/5|0/5|
+||||||
 |:hammer:| **RTCPeerConnection-setLocalDescription-answer**||||
 ||setLocalDescription() with valid answer should succeed|:white_check_mark:|:x:|:white_check_mark:|
 ||setLocalDescription() with type answer and null sdp should use lastAnswer generated from createAnswer|:white_check_mark:|:x:|:x:|
@@ -1022,6 +1067,7 @@
 ||Calling setLocalDescription(answer) from have-local-offer state should reject with InvalidStateError|:white_check_mark:|:x:|:x:|
 ||Test onsignalingstatechange event for setLocalDescription() with valid answer should succeed|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |4/6|1/6|2/6|
+||||||
 |:hammer:| **RTCPeerConnection-setLocalDescription-offer**||||
 ||setLocalDescription with valid offer should succeed|:white_check_mark:|:x:|:white_check_mark:|
 ||setLocalDescription with type offer and null sdp should use lastOffer generated from createOffer|:white_check_mark:|:x:|:x:|
@@ -1031,6 +1077,7 @@
 ||Test onsignalingstatechange event for setLocalDescription with valid offer should succeed|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Test onsignalingstatechange event for Creating and setting offer multiple times should succeed|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |4/7|2/7|3/7|
+||||||
 |:hammer:| **RTCPeerConnection-setLocalDescription-pranswer**||||
 ||setLocalDescription(pranswer) from stable state should reject with InvalidStateError|:white_check_mark:|:x:|:x:|
 ||setLocalDescription(pranswer) should succeed|:x:|:x:|:x:|
@@ -1040,6 +1087,7 @@
 ||Test onsignalingstatechange event for setLocalDescription(pranswer) can be applied multiple times while still in have-local-pranswer|:x:|:white_check_mark:|:x:|
 ||Test onsignalingstatechange event for setLocalDescription(answer) from have-local-pranswer state should succeed|:x:|:white_check_mark:|:x:|
 ||`Test Total` |3/7|4/7|0/7|
+||||||
 |:hammer:| **RTCPeerConnection-setLocalDescription-rollback**||||
 ||setLocalDescription(rollback) from have-local-offer state should reset back to stable state|:x:|:x:|:x:|
 ||setLocalDescription(rollback) from stable state should reject with InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
@@ -1047,18 +1095,21 @@
 ||setLocalDescription(rollback) should ignore invalid sdp content and succeed|:x:|:x:|:x:|
 ||Test onsignalingstatechange event for setLocalDescription(rollback) from have-local-offer state should reset back to stable state|:x:|:x:|:x:|
 ||`Test Total` |2/5|0/5|2/5|
+||||||
 |:hammer:| **RTCPeerConnection-setLocalDescription**||||
 ||Calling createOffer() and setLocalDescription() again after one round of local-offer/remote-answer should succeed|:white_check_mark:|:x:|:white_check_mark:|
 ||Switching role from answerer to offerer after going back to stable state should succeed|:white_check_mark:|:x:|:x:|
 ||Test onsignalingstatechange event for Calling createOffer() and setLocalDescription() again after one round of local-offer/remote-answer should succeed|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Test onsignalingstatechange event for Switching role from answerer to offerer after going back to stable state should succeed|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |3/4|2/4|3/4|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-answer**||||
 ||setRemoteDescription() with valid state and answer should succeed|:white_check_mark:|:x:|:white_check_mark:|
 ||Calling setRemoteDescription(answer) from stable state should reject with InvalidStateError|:white_check_mark:|:x:|:x:|
 ||Calling setRemoteDescription(answer) from have-remote-offer state should reject with InvalidStateError|:white_check_mark:|:x:|:x:|
 ||Test onsignalingstatechange event for setRemoteDescription() with valid state and answer should succeed|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |4/4|1/4|2/4|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-offer**||||
 ||setRemoteDescription with valid offer should succeed|:x:|:x:|:white_check_mark:|
 ||setRemoteDescription multiple times should succeed|:x:|:x:|:x:|
@@ -1069,6 +1120,7 @@
 ||Test onsignalingstatechange event for setRemoteDescription multiple times should succeed|:x:|:white_check_mark:|:white_check_mark:|
 ||Test onsignalingstatechange event for setRemoteDescription multiple times with different offer should succeed|:x:|:white_check_mark:|:x:|
 ||`Test Total` |1/8|3/8|3/8|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-pranswer**||||
 ||setRemoteDescription(pranswer) from stable state should reject with InvalidStateError|:white_check_mark:|:x:|:x:|
 ||setRemoteDescription(pranswer) from have-local-offer state should succeed|:white_check_mark:|:x:|:x:|
@@ -1078,6 +1130,7 @@
 ||Test onsignalingstatechange event for setRemoteDescription(pranswer) multiple times should succeed|:white_check_mark:|:white_check_mark:|:x:|
 ||Test onsignalingstatechange event for setRemoteDescription(answer) from have-remote-pranswer state should succeed|:white_check_mark:|:white_check_mark:|:x:|
 ||`Test Total` |7/7|4/7|0/7|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-replaceTrack.https**||||
 ||replaceTrack() sets the track attribute to a new track.|:x:|:x:|:x:|
 ||replaceTrack() sets the track attribute to null.|:x:|:x:|:x:|
@@ -1086,12 +1139,14 @@
 ||replaceTrack() rejects when invoked after removeTrack().|:x:|:x:|:x:|
 ||replaceTrack() rejects after a subsequent removeTrack().|:x:|:x:|:x:|
 ||`Test Total` |0/6|0/6|0/6|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-rollback**||||
 ||setRemoteDescription(rollback) in have-remote-offer state should revert to stable state|:x:|:x:|:x:|
 ||setRemoteDescription(rollback) from stable state should reject with InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
 ||setRemoteDescription(rollback) should ignore invalid sdp content and succeed|:x:|:x:|:white_check_mark:|
 ||Test onsignalingstatechange event for setRemoteDescription(rollback) in have-remote-offer state should revert to stable state|:x:|:x:|:x:|
 ||`Test Total` |1/4|0/4|2/4|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription-tracks.https**||||
 ||addTrack() with a track and no stream makes ontrack fire with a track and no stream.|:x:|:x:|:x:|
 ||addTrack() with a track and a stream makes ontrack fire with a track and a stream.|:white_check_mark:|:x:|:white_check_mark:|
@@ -1106,6 +1161,7 @@
 ||track.onmute fires before setRemoteDescription resolves.|:x:|:x:|:x:|
 ||removeTrack() twice is safe.|:x:|:x:|:x:|
 ||`Test Total` |2/12|0/12|1/12|
+||||||
 |:hammer:| **RTCPeerConnection-setRemoteDescription**||||
 ||setRemoteDescription with invalid type and invalid SDP should reject with TypeError|:x:|:white_check_mark:|:white_check_mark:|
 ||setRemoteDescription() with invalid SDP and stable state should reject with InvalidStateError|:white_check_mark:|:x:|:white_check_mark:|
@@ -1114,6 +1170,7 @@
 ||Test onsignalingstatechange event for Calling setRemoteDescription() again after one round of remote-offer/local-answer should succeed|:x:|:x:|:x:|
 ||Test onsignalingstatechange event for Switching role from offerer to answerer after going back to stable state should succeed|:x:|:x:|:x:|
 ||`Test Total` |1/6|1/6|2/6|
+||||||
 |:hammer:| **RTCPeerConnection-track-stats.https**||||
 ||addTrack() without setLocalDescription() yields track stats|:x:|:x:|:x:|
 ||addTrack() without setLocalDescription() yields media stream stats|:x:|:x:|:x:|
@@ -1128,6 +1185,7 @@
 ||replaceTrack() after answer: new track attachment stats present|:x:|:x:|:x:|
 ||replaceTrack(): original track attachment stats present after replacing|:x:|:x:|:x:|
 ||`Test Total` |0/12|1/12|0/12|
+||||||
 |:hammer:| **RTCPeerConnectionIceEvent-constructor**||||
 ||RTCPeerConnectionIceEvent with no arguments throws TypeError|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent with no eventInitDict (default)|:x:|:x:|:x:|
@@ -1138,6 +1196,7 @@
 ||RTCPeerConnectionIceEvent with non RTCIceCandidate object throws|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent bubbles and cancelable|:x:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |0/8|5/8|6/8|
+||||||
 |:hammer:| **RTCRtpParameters-codecs**||||
 ||setParameters() with codec.payloadType modified should reject with InvalidModificationError|:x:|:x:|:x:|
 ||setParameters() with codec.mimeType modified should reject with InvalidModificationError|:x:|:x:|:x:|
@@ -1148,10 +1207,12 @@
 ||setParameters with reordered codecs should succeed|:x:|:x:|:x:|
 ||setParameters with dropped codec should succeed|:x:|:x:|:x:|
 ||`Test Total` |0/8|0/8|0/8|
+||||||
 |:hammer:| **RTCRtpParameters-degradationPreference**||||
 ||setParameters with degradationPreference set should succeed|:x:|:x:|:x:|
 ||setParameters with degradationPreference unset should succeed|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCRtpParameters-encodings**||||
 ||addTransceiver() with undefined sendEncodings should have default encoding parameter with active set to true|:x:|:x:|:x:|
 ||addTransceiver() with empty list sendEncodings should have default encoding parameter with active set to true|:x:|:x:|:x:|
@@ -1172,13 +1233,16 @@
 ||setParameters() with modified encoding.maxBitrate should succeed|:x:|:x:|:x:|
 ||setParameters() with modified encoding.maxFramerate should succeed|:x:|:x:|:x:|
 ||`Test Total` |0/18|0/18|0/18|
+||||||
 |:hammer:| **RTCRtpParameters-headerExtensions**||||
 ||setParameters() with modified headerExtensions should reject with InvalidModificationError|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpParameters-rtcp**||||
 ||setParameters() with modified rtcp.cname should reject with InvalidModificationError|:x:|:x:|:x:|
 ||setParameters() with modified rtcp.reducedSize should reject with InvalidModificationError|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCRtpParameters-transactionId**||||
 ||sender.getParameters() should return different transaction IDs for each call|:x:|:x:|:x:|
 ||sender.setParameters() with transaction ID different from last getParameters() should reject with InvalidModificationError|:x:|:x:|:x:|
@@ -1186,30 +1250,38 @@
 ||setParameters() twice with the same parameters should reject with InvalidModificationError|:x:|:x:|:x:|
 ||setParameters() with parameters older than last getParameters() should reject with InvalidModificationError|:x:|:x:|:x:|
 ||`Test Total` |0/5|0/5|0/5|
+||||||
 |:hammer:| **RTCRtpReceiver-getCapabilities**||||
 ||RTCRtpSender.getCapabilities('audio') should return RTCRtpCapabilities dictionary|:x:|:x:|:x:|
 ||RTCRtpSender.getCapabilities('video') should return RTCRtpCapabilities dictionary|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCRtpReceiver-getContributingSources.https**||||
 ||getContributingSources() should return list of CSRC after connection is established|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpReceiver-getParameters**||||
 ||RTCRtpReceiver.prototype.getParameters|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpReceiver-getStats**||||
 ||receiver.getStats() should return stats report containing inbound-rtp stats|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpReceiver-getSynchronizationSources.https**||||
 ||getContributingSources() should return list of CSRC after connection is established|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpSender-getCapabilities**||||
 ||RTCRtpSender.getCapabilities('audio') should return RTCRtpCapabilities dictionary|:x:|:x:|:x:|
 ||RTCRtpSender.getCapabilities('video') should return RTCRtpCapabilities dictionary|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCRtpSender-getStats.https**||||
 ||sender.getStats() via addTransceiver should return stats report containing outbound-rtp stats|:x:|:x:|:x:|
 ||sender.getStats() via addTrack should return stats report containing outbound-rtp stats|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCRtpSender-replaceTrack**||||
 ||Calling replaceTrack on closed connection should reject with InvalidStateError|:x:|:x:|:x:|
 ||Calling replaceTrack with track of different kind should reject with TypeError|:x:|:x:|:x:|
@@ -1221,9 +1293,11 @@
 ||Calling replaceTrack on sender with stopped track and and set to session description should resolve with sender.track set to given track|:x:|:x:|:x:|
 ||Calling replaceTrack on sender with similar track and and set to session description should resolve with sender.track set to new track|:x:|:x:|:x:|
 ||`Test Total` |0/9|0/9|0/9|
+||||||
 |:hammer:| **RTCRtpSender-setParameters**||||
 ||setParameters() when transceiver is stopped should reject with InvalidStateError|:x:|:x:|:x:|
 ||`Test Total` |0/1|0/1|0/1|
+||||||
 |:hammer:| **RTCRtpTransceiver-setCodecPreferences**||||
 ||setCodecPreferences() on audio transceiver with codecs returned from RTCRtpSender.getCapabilities('audio') should succeed|:x:|:x:|:x:|
 ||setCodecPreferences() on video transceiver with codecs returned from RTCRtpReceiver.getCapabilities('video') should succeed|:x:|:x:|:x:|
@@ -1235,15 +1309,18 @@
 ||setCodecPreferences() with user defined codec together with codecs returned from getCapabilities() should throw InvalidAccessError|:x:|:x:|:x:|
 ||setCodecPreferences() with modified codecs returned from getCapabilities() should throw InvalidAccessError|:x:|:x:|:x:|
 ||`Test Total` |0/9|0/9|0/9|
+||||||
 |:hammer:| **RTCRtpTransceiver-setDirection**||||
 ||setDirection should change transceiver.direction|:x:|:x:|:x:|
 ||setDirection with same direction should have no effect|:x:|:x:|:x:|
 ||setDirection should change transceiver.direction independent of transceiver.currentDirection|:x:|:x:|:x:|
 ||`Test Total` |0/3|0/3|0/3|
+||||||
 |:hammer:| **RTCSctpTransport-constructor**||||
 ||setRemoteDescription() with answer containing data media should initialize pc.sctp|:x:|:x:|:x:|
 ||setLocalDescription() with answer containing data media should initialize pc.sctp|:x:|:x:|:x:|
 ||`Test Total` |0/2|0/2|0/2|
+||||||
 |:hammer:| **RTCSctpTransport-maxMessageSize**||||
 ||Determine the local side send limitation (canSendSize) by offering a max-message-size of 0|:x:|:x:|:x:|
 ||Remote offer SDP missing max-message-size attribute|:x:|:x:|:x:|
@@ -1251,6 +1328,7 @@
 ||Renegotiate max-message-size with a (non-zero) value provided by the remote peer|:x:|:x:|:x:|
 ||max-message-size with a (non-zero) value larger than canSendSize provided by the remote peer|:x:|:x:|:x:|
 ||`Test Total` |0/5|0/5|0/5|
+||||||
 |:hammer:| **RTCTrackEvent-constructor**||||
 ||new RTCTrackEvent() with valid receiver, track, transceiver should succeed|:x:|:x:|:x:|
 ||new RTCTrackEvent() with valid receiver, track, streams, transceiver should succeed|:x:|:x:|:x:|
@@ -1260,7 +1338,9 @@
 ||new RTCTrackEvent() with no track should throw TypeError|:x:|:x:|:x:|
 ||new RTCTrackEvent() with no receiver should throw TypeError|:x:|:x:|:x:|
 ||`Test Total` |0/7|0/7|0/7|
+||||||
 |:hammer:| **simplecall**||||
 ||Can set up a basic WebRTC call.|:x:|:x:|:white_check_mark:|
 ||`Test Total` |0/1|0/1|1/1|
+||||||
 ||`Totals` |270/1099|360/1099|394/1099|

@@ -69,6 +69,7 @@ for (let name in merged)
 		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefox) + "|\r\n" ;
 	}
 	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total + "|\r\n";
+	markdown += "||||||\r\n";
 	total += page.total;
 	ie += page.passed.ie;
 	chrome += page.passed.chrome;
