@@ -51,16 +51,25 @@ var status_text = {};
 
 async function runall (tests, browser)
 {
+	let driver;
 	//Create filenames
 	const out  = browser + ".html";
 	const json = browser + ".json";
+	
+	try {
+		//Create driver
+		driver = await new Builder ().forBrowser (browser).build ();
+	} catch (e) {
+		console.error(e);
+		return;
+	}
+	
 
 	//Write html header
 	fs.writeFileSync (out, '<html><head><link rel="stylesheet" href="https://cdn.rawgit.com/w3c/web-platform-tests/03bbca89/resources/testharness.css"></head><body>', trowError);
 
-	//Create driver
-	const driver = await new Builder ().forBrowser (browser).build ();
-
+	
+		
 	let total = 0;
 	let passed = 0;
 	let results = {};

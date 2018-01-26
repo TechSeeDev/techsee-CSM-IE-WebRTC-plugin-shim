@@ -3,7 +3,8 @@ const results =
 {
 	ie      : require("../internet explorer.json"),
 	chrome  : require("../chrome.json"),
-	firefox : require("../firefox.json")
+	firefox : require("../firefox.json"),
+	edge    : require("../MicrosoftEdge")
 };
 
 
@@ -47,8 +48,8 @@ for (let browser in results)
 
 let markdown = "# Web Platform test results\r\n";
 
-markdown += "||Test|IE|Chrome|Firefox|\r\n";
-markdown += "|---|---|---|---|---|\r\n";
+markdown += "||Test|IE|Chrome|Firefox|Edge|\r\n";
+markdown += "|---|---|---|---|---|---|\r\n";
 
 function result(status)
 {
@@ -58,25 +59,27 @@ let total = 0;
 let ie = 0;
 let chrome = 0;
 let firefox = 0;
+let edge = 0;
 for (let name in merged)
 {
 	const page = merged[name];
-	markdown += "|:hammer:| **" + name + "**||||\r\n";
+	markdown += "|:hammer:| **" + name + "**|||||\r\n";
 	//For each test
 	for (let test in page.results)
 	{
 		const results = page.results[test];
-		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefox) + "|\r\n" ;
+		markdown += "||" + test.replace(/\n|\r/g, "") + "|" + result(results.ie) + "|"  +  result(results.chrome) + "|"  +  result(results.firefox) + "|"  +  result(results.dege) + "|\r\n" ;
 	}
-	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total + "|\r\n";
-	markdown += "||||||\r\n";
+	markdown += "||`Test Total` |" + page.passed.ie + "/" + page.total + "|" + page.passed.chrome  + "/" + page.total + "|" + page.passed.firefox  + "/" + page.total+ "|" + page.passed.edge  + "/" + page.total + +"|\r\n";
+	markdown += "|||||||\r\n";
 	total += page.total;
 	ie += page.passed.ie;
 	chrome += page.passed.chrome;
 	firefox += page.passed.firefox;
+	edge += page.passed.edge;
 }
 
-markdown += "||`Totals` |" + ie + "/" + total + "|" + chrome  + "/" + total + "|" + firefox  + "/" + total + "|\r\n";
+markdown += "||`Totals` |" + ie + "/" + total + "|" + chrome  + "/" + total + "|" + firefox  + "/" + total + "|" + edge  + "/" + total + "|\r\n";
 
 //Write html header
 fs.writeFileSync ("tests_results.md", markdown);
