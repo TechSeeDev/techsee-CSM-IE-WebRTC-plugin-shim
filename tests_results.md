@@ -488,12 +488,9 @@
 ||RTCDataChannelEvent interface: existence and properties of interface prototype object|:white_check_mark:|:x:|:x:|
 ||RTCDataChannelEvent interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:x:|:x:|
 ||RTCDataChannelEvent interface: attribute channel|:white_check_mark:|:x:|:x:|
-||RTCDataChannelEvent must be primary interface of new RTCDataChannelEvent('channel',
- { channel: new RTCPeerConnection().createDataChannel('') })|:white_check_mark:|:x:|:x:|
-||Stringification of new RTCDataChannelEvent('channel',
- { channel: new RTCPeerConnection().createDataChannel('') })|:white_check_mark:|:x:|:x:|
-||RTCDataChannelEvent interface: new RTCDataChannelEvent('channel',
- { channel: new RTCPeerConnection().createDataChannel('') }) must inherit property "channel" with the proper type|:white_check_mark:|:x:|:x:|
+||RTCDataChannelEvent must be primary interface of new RTCDataChannelEvent('channel', { channel: new RTCPeerConnection().createDataChannel('') })|:white_check_mark:|:x:|:x:|
+||Stringification of new RTCDataChannelEvent('channel', { channel: new RTCPeerConnection().createDataChannel('') })|:white_check_mark:|:x:|:x:|
+||RTCDataChannelEvent interface: new RTCDataChannelEvent('channel', { channel: new RTCPeerConnection().createDataChannel('') }) must inherit property "channel" with the proper type|:white_check_mark:|:x:|:x:|
 ||RTCDTMFSender interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCDTMFSender interface object length|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCDTMFSender interface object name|:white_check_mark:|:white_check_mark:|:x:|
@@ -531,12 +528,9 @@
 ||RTCErrorEvent must be primary interface of new RTCErrorEvent('error')|:white_check_mark:|:white_check_mark:|:x:|
 ||Stringification of new RTCErrorEvent('error')|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCErrorEvent interface: new RTCErrorEvent('error') must inherit property "error" with the proper type|:white_check_mark:|:white_check_mark:|:x:|
-||RTCDataChannelEvent must be primary interface of new RTCDataChannelEvent('channel',
-        { channel: new RTCPeerConnection().createDataChannel('') })|:x:|:x:|:x:|
-||Stringification of new RTCDataChannelEvent('channel',
-        { channel: new RTCPeerConnection().createDataChannel('') })|:x:|:x:|:x:|
-||RTCDataChannelEvent interface: new RTCDataChannelEvent('channel',
-        { channel: new RTCPeerConnection().createDataChannel('') }) must inherit property "channel" with the proper type|:x:|:x:|:x:|
+||RTCDataChannelEvent must be primary interface of new RTCDataChannelEvent('channel',        { channel: new RTCPeerConnection().createDataChannel('') })|:x:|:x:|:x:|
+||Stringification of new RTCDataChannelEvent('channel',        { channel: new RTCPeerConnection().createDataChannel('') })|:x:|:x:|:x:|
+||RTCDataChannelEvent interface: new RTCDataChannelEvent('channel',        { channel: new RTCPeerConnection().createDataChannel('') }) must inherit property "channel" with the proper type|:x:|:x:|:x:|
 ||`Test Total` |82/504|201/504|221/504|
 |:hammer:| **no-media-call**||||
 ||Can set up a basic WebRTC call with no data.|:x:|:x:|:x:|
