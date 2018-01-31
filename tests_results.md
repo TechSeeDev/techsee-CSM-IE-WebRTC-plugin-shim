@@ -12,34 +12,34 @@
 |:hammer:| **historical**|||||
 ||RTCDataChannel member reliable should not exist|:white_check_mark:|:x:|:x:|:x:|
 ||RTCPeerConnection member addStream should not exist|:x:|:x:|:x:|:x:|
-||RTCPeerConnection member createDTMFSender should not exist|:white_check_mark:|:x:|:white_check_mark:|:x:|
+||RTCPeerConnection member createDTMFSender should not exist|:white_check_mark:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection member getLocalStreams should not exist|:white_check_mark:|:x:|:x:|:x:|
 ||RTCPeerConnection member getRemoteStreams should not exist|:white_check_mark:|:x:|:x:|:x:|
 ||RTCPeerConnection member getStreamById should not exist|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection member onaddstream should not exist|:white_check_mark:|:x:|:x:|:x:|
 ||RTCPeerConnection member onremovestream should not exist|:white_check_mark:|:x:|:x:|:x:|
 ||RTCPeerConnection member removeStream should not exist|:white_check_mark:|:x:|:white_check_mark:|:x:|
-||RTCPeerConnection member updateIce should not exist|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||mozRTCIceCandidate interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||mozRTCPeerConnection interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||mozRTCSessionDescription interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||RTCPeerConnection member updateIce should not exist|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||mozRTCIceCandidate interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
+||mozRTCPeerConnection interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
+||mozRTCSessionDescription interface should not exist|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||webkitRTCPeerConnection interface should not exist|:white_check_mark:|:x:|:white_check_mark:|:x:|
 ||`Test Total` |13/14|5/14|5/14|5/14|
 |||||||
 |:hammer:| **interfaces.https**|||||
-||Main test driver|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||Main test driver|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Test driver for asyncInitCertificate|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||Test driver for asyncInitTransports|:x:|:x:|:x:|:x:|
-||Test driver for asyncInitMediaStreamTrack|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||Test driver for asyncInitMediaStreamTrack|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||MediaStreamTrack interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
 ||MediaStreamTrack interface object length|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||MediaStreamTrack interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||MediaStreamTrack interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||MediaStreamTrack interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||MediaStreamTrack interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||MediaStreamTrack interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||MediaStreamTrack interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||MediaStreamTrack interface: attribute isolated|:x:|:x:|:x:|:x:|
 ||MediaStreamTrack interface: attribute onisolationchange|:x:|:x:|:x:|:x:|
-||MediaStreamTrack must be primary interface of idlTestObjects.mediaStreamTrack|:x:|:white_check_mark:|:x:|:x:|
-||Stringification of idlTestObjects.mediaStreamTrack|:x:|:white_check_mark:|:x:|:x:|
+||MediaStreamTrack must be primary interface of idlTestObjects.mediaStreamTrack|:x:|:white_check_mark:|:x:|:white_check_mark:|
+||Stringification of idlTestObjects.mediaStreamTrack|:x:|:white_check_mark:|:x:|:white_check_mark:|
 ||MediaStreamTrack interface: idlTestObjects.mediaStreamTrack must inherit property "isolated" with the proper type|:x:|:x:|:x:|:x:|
 ||MediaStreamTrack interface: idlTestObjects.mediaStreamTrack must inherit property "onisolationchange" with the proper type|:white_check_mark:|:x:|:x:|:x:|
 ||MediaStreamTrack must be primary interface of generateMediaStreamTrack('audio')|:x:|:x:|:x:|:x:|
@@ -48,29 +48,29 @@
 ||MediaStreamTrack interface: generateMediaStreamTrack('audio') must inherit property "onisolationchange" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCPeerConnection interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface object length|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface object name|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection interface object name|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnection interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnection interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: operation createOffer(RTCOfferOptions)|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: operation createAnswer(RTCAnswerOptions)|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: operation setLocalDescription(RTCSessionDescriptionInit)|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: attribute localDescription|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: attribute localDescription|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: attribute currentLocalDescription|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: attribute pendingLocalDescription|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: operation setRemoteDescription(RTCSessionDescriptionInit)|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: attribute remoteDescription|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: attribute remoteDescription|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: attribute currentRemoteDescription|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: attribute pendingRemoteDescription|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: operation addIceCandidate([object Object],[object Object])|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: attribute signalingState|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: attribute iceGatheringState|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnection interface: attribute iceConnectionState|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: attribute signalingState|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnection interface: attribute iceGatheringState|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnection interface: attribute iceConnectionState|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: attribute connectionState|:x:|:x:|:x:|:x:|
-||RTCPeerConnection interface: attribute canTrickleIceCandidates|:x:|:x:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: attribute canTrickleIceCandidates|:x:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: operation getDefaultIceServers()|:white_check_mark:|:x:|:x:|:x:|
-||RTCPeerConnection interface: operation getConfiguration()|:white_check_mark:|:x:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: operation getConfiguration()|:white_check_mark:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: operation setConfiguration(RTCConfiguration)|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||RTCPeerConnection interface: operation close()|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection interface: operation close()|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnection interface: attribute onnegotiationneeded|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: attribute onicecandidate|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: attribute onicecandidateerror|:x:|:x:|:x:|:x:|
@@ -171,25 +171,25 @@
 ||RTCPeerConnection interface: new RTCPeerConnection() must inherit property "peerIdentity" with the proper type|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: new RTCPeerConnection() must inherit property "idpLoginUrl" with the proper type|:x:|:x:|:white_check_mark:|:x:|
 ||RTCPeerConnection interface: new RTCPeerConnection() must inherit property "idpErrorInfo" with the proper type|:x:|:x:|:x:|:x:|
-||RTCSessionDescription interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCSessionDescription interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCSessionDescription interface object length|:x:|:x:|:x:|:x:|
-||RTCSessionDescription interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCSessionDescription interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCSessionDescription interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCSessionDescription interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCSessionDescription interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCSessionDescription interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCSessionDescription interface: attribute type|:x:|:x:|:x:|:x:|
 ||RTCSessionDescription interface: attribute sdp|:x:|:x:|:x:|:x:|
-||RTCSessionDescription interface: operation toJSON()|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCSessionDescription must be primary interface of new RTCSessionDescription({ type: 'offer' })|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||Stringification of new RTCSessionDescription({ type: 'offer' })|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCSessionDescription interface: new RTCSessionDescription({ type: 'offer' }) must inherit property "type" with the proper type|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCSessionDescription interface: operation toJSON()|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCSessionDescription must be primary interface of new RTCSessionDescription({ type: 'offer' })|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||Stringification of new RTCSessionDescription({ type: 'offer' })|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCSessionDescription interface: new RTCSessionDescription({ type: 'offer' }) must inherit property "type" with the proper type|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCSessionDescription interface: new RTCSessionDescription({ type: 'offer' }) must inherit property "sdp" with the proper type|:x:|:x:|:white_check_mark:|:x:|
-||RTCSessionDescription interface: new RTCSessionDescription({ type: 'offer' }) must inherit property "toJSON()" with the proper type|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCSessionDescription interface: new RTCSessionDescription({ type: 'offer' }) must inherit property "toJSON()" with the proper type|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||Test default toJSON operation of RTCSessionDescription|:x:|:x:|:white_check_mark:|:x:|
-||RTCIceCandidate interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCIceCandidate interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCIceCandidate interface object length|:x:|:x:|:x:|:x:|
-||RTCIceCandidate interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCIceCandidate interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCIceCandidate interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCIceCandidate interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCIceCandidate interface: existence and properties of interface prototype object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCIceCandidate interface: existence and properties of interface prototype object's "constructor" property|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCIceCandidate interface: attribute candidate|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: attribute sdpMid|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: attribute sdpMLineIndex|:x:|:x:|:x:|:x:|
@@ -204,12 +204,12 @@
 ||RTCIceCandidate interface: attribute relatedAddress|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: attribute relatedPort|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: attribute usernameFragment|:x:|:x:|:x:|:x:|
-||RTCIceCandidate interface: operation toJSON()|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCIceCandidate must be primary interface of new RTCIceCandidate({ sdpMid: 1 })|:x:|:x:|:x:|:x:|
-||Stringification of new RTCIceCandidate({ sdpMid: 1 })|:x:|:x:|:x:|:x:|
+||RTCIceCandidate interface: operation toJSON()|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCIceCandidate must be primary interface of new RTCIceCandidate({ sdpMid: 1 })|:x:|:x:|:x:|:white_check_mark:|
+||Stringification of new RTCIceCandidate({ sdpMid: 1 })|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "candidate" with the proper type|:x:|:x:|:x:|:x:|
-||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "sdpMid" with the proper type|:x:|:x:|:x:|:x:|
-||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "sdpMLineIndex" with the proper type|:x:|:x:|:x:|:x:|
+||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "sdpMid" with the proper type|:x:|:x:|:x:|:white_check_mark:|
+||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "sdpMLineIndex" with the proper type|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "foundation" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "component" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "priority" with the proper type|:x:|:x:|:x:|:x:|
@@ -221,14 +221,14 @@
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "relatedAddress" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "relatedPort" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "usernameFragment" with the proper type|:x:|:x:|:x:|:x:|
-||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "toJSON()" with the proper type|:x:|:x:|:x:|:x:|
-||Test toJSON operation of RTCIceCandidate|:x:|:x:|:x:|:x:|
+||RTCIceCandidate interface: new RTCIceCandidate({ sdpMid: 1 }) must inherit property "toJSON()" with the proper type|:x:|:x:|:x:|:white_check_mark:|
+||Test toJSON operation of RTCIceCandidate|:x:|:x:|:x:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent interface: existence and properties of interface object|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCPeerConnectionIceEvent interface object length|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent interface object name|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent interface: attribute candidate|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnectionIceEvent interface object name|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnectionIceEvent interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnectionIceEvent interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnectionIceEvent interface: attribute candidate|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent interface: attribute url|:x:|:x:|:x:|:x:|
 ||RTCPeerConnectionIceEvent must be primary interface of new RTCPeerConnectionIceEvent('ice')|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||Stringification of new RTCPeerConnectionIceEvent('ice')|:x:|:white_check_mark:|:white_check_mark:|:x:|
@@ -262,14 +262,14 @@
 ||RTCCertificate interface: idlTestObjects.certificate must inherit property "expires" with the proper type|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCCertificate interface: idlTestObjects.certificate must inherit property "getFingerprints()" with the proper type|:x:|:white_check_mark:|:x:|:x:|
 ||RTCCertificate interface: idlTestObjects.certificate must inherit property "getAlgorithm()" with the proper type|:x:|:x:|:x:|:x:|
-||RTCRtpSender interface: existence and properties of interface object|:x:|:x:|:white_check_mark:|:x:|
+||RTCRtpSender interface: existence and properties of interface object|:x:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCRtpSender interface object length|:x:|:x:|:white_check_mark:|:x:|
-||RTCRtpSender interface object name|:x:|:x:|:white_check_mark:|:x:|
+||RTCRtpSender interface object name|:x:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCRtpSender interface: existence and properties of interface prototype object|:x:|:x:|:white_check_mark:|:x:|
-||RTCRtpSender interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:white_check_mark:|:x:|
-||RTCRtpSender interface: attribute track|:x:|:x:|:white_check_mark:|:x:|
-||RTCRtpSender interface: attribute transport|:x:|:x:|:x:|:x:|
-||RTCRtpSender interface: attribute rtcpTransport|:x:|:x:|:x:|:x:|
+||RTCRtpSender interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:white_check_mark:|:white_check_mark:|
+||RTCRtpSender interface: attribute track|:x:|:x:|:white_check_mark:|:white_check_mark:|
+||RTCRtpSender interface: attribute transport|:x:|:x:|:x:|:white_check_mark:|
+||RTCRtpSender interface: attribute rtcpTransport|:x:|:x:|:x:|:white_check_mark:|
 ||RTCRtpSender interface: operation getCapabilities(DOMString)|:x:|:x:|:x:|:x:|
 ||RTCRtpSender interface: operation setParameters(RTCRtpParameters)|:x:|:x:|:white_check_mark:|:x:|
 ||RTCRtpSender interface: operation getParameters()|:x:|:x:|:white_check_mark:|:x:|
@@ -290,17 +290,17 @@
 ||RTCRtpSender interface: calling replaceTrack(MediaStreamTrack) on new RTCPeerConnection().addTransceiver('audio').sender with too few arguments must throw TypeError|:x:|:x:|:x:|:x:|
 ||RTCRtpSender interface: new RTCPeerConnection().addTransceiver('audio').sender must inherit property "getStats()" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCRtpSender interface: new RTCPeerConnection().addTransceiver('audio').sender must inherit property "dtmf" with the proper type|:x:|:x:|:x:|:x:|
-||RTCRtpReceiver interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCRtpReceiver interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCRtpReceiver interface object length|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCRtpReceiver interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCRtpReceiver interface object name|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCRtpReceiver interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCRtpReceiver interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCRtpReceiver interface: attribute track|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCRtpReceiver interface: attribute transport|:x:|:x:|:x:|:x:|
-||RTCRtpReceiver interface: attribute rtcpTransport|:x:|:x:|:x:|:x:|
+||RTCRtpReceiver interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCRtpReceiver interface: attribute track|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCRtpReceiver interface: attribute transport|:x:|:x:|:x:|:white_check_mark:|
+||RTCRtpReceiver interface: attribute rtcpTransport|:x:|:x:|:x:|:white_check_mark:|
 ||RTCRtpReceiver interface: operation getCapabilities(DOMString)|:x:|:x:|:x:|:x:|
 ||RTCRtpReceiver interface: operation getParameters()|:x:|:x:|:x:|:x:|
-||RTCRtpReceiver interface: operation getContributingSources()|:x:|:white_check_mark:|:x:|:x:|
+||RTCRtpReceiver interface: operation getContributingSources()|:x:|:white_check_mark:|:x:|:white_check_mark:|
 ||RTCRtpReceiver interface: operation getSynchronizationSources()|:x:|:x:|:x:|:x:|
 ||RTCRtpReceiver interface: operation getStats()|:x:|:x:|:white_check_mark:|:x:|
 ||RTCRtpReceiver must be primary interface of new RTCPeerConnection().addTransceiver('audio').receiver|:x:|:x:|:x:|:x:|
@@ -358,14 +358,14 @@
 ||RTCRtpTransceiver interface: new RTCPeerConnection().addTransceiver('audio') must inherit property "stop()" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCRtpTransceiver interface: new RTCPeerConnection().addTransceiver('audio') must inherit property "setCodecPreferences([object Object])" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCRtpTransceiver interface: calling setCodecPreferences([object Object]) on new RTCPeerConnection().addTransceiver('audio') with too few arguments must throw TypeError|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface: existence and properties of interface object|:x:|:x:|:x:|:x:|
+||RTCDtlsTransport interface: existence and properties of interface object|:x:|:x:|:x:|:white_check_mark:|
 ||RTCDtlsTransport interface object length|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface object name|:x:|:x:|:x:|:x:|
+||RTCDtlsTransport interface object name|:x:|:x:|:x:|:white_check_mark:|
 ||RTCDtlsTransport interface: existence and properties of interface prototype object|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface: attribute transport|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface: attribute state|:x:|:x:|:x:|:x:|
-||RTCDtlsTransport interface: operation getRemoteCertificates()|:x:|:x:|:x:|:x:|
+||RTCDtlsTransport interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:x:|:white_check_mark:|
+||RTCDtlsTransport interface: attribute transport|:x:|:x:|:x:|:white_check_mark:|
+||RTCDtlsTransport interface: attribute state|:x:|:x:|:x:|:white_check_mark:|
+||RTCDtlsTransport interface: operation getRemoteCertificates()|:x:|:x:|:x:|:white_check_mark:|
 ||RTCDtlsTransport interface: attribute onstatechange|:x:|:x:|:x:|:x:|
 ||RTCDtlsTransport must be primary interface of idlTestObjects.dtlsTransport|:x:|:x:|:x:|:x:|
 ||Stringification of idlTestObjects.dtlsTransport|:x:|:x:|:x:|:x:|
@@ -375,18 +375,18 @@
 ||RTCDtlsTransport interface: idlTestObjects.dtlsTransport must inherit property "onstatechange" with the proper type|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface: existence and properties of interface object|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface object length|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface object name|:x:|:x:|:x:|:x:|
+||RTCIceTransport interface object name|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceTransport interface: existence and properties of interface prototype object|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: attribute role|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: attribute component|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: attribute state|:x:|:x:|:x:|:x:|
+||RTCIceTransport interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:x:|:white_check_mark:|
+||RTCIceTransport interface: attribute role|:x:|:x:|:x:|:white_check_mark:|
+||RTCIceTransport interface: attribute component|:x:|:x:|:x:|:white_check_mark:|
+||RTCIceTransport interface: attribute state|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceTransport interface: attribute gatheringState|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface: operation getLocalCandidates()|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: operation getRemoteCandidates()|:x:|:x:|:x:|:x:|
+||RTCIceTransport interface: operation getRemoteCandidates()|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceTransport interface: operation getSelectedCandidatePair()|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface: operation getLocalParameters()|:x:|:x:|:x:|:x:|
-||RTCIceTransport interface: operation getRemoteParameters()|:x:|:x:|:x:|:x:|
+||RTCIceTransport interface: operation getRemoteParameters()|:x:|:x:|:x:|:white_check_mark:|
 ||RTCIceTransport interface: attribute onstatechange|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface: attribute ongatheringstatechange|:x:|:x:|:x:|:x:|
 ||RTCIceTransport interface: attribute onselectedcandidatepairchange|:x:|:x:|:x:|:x:|
@@ -504,17 +504,17 @@
 ||RTCDTMFSender interface: attribute toneBuffer|:x:|:x:|:white_check_mark:|:x:|
 ||RTCDTMFToneChangeEvent interface: existence and properties of interface object|:x:|:x:|:white_check_mark:|:x:|
 ||RTCDTMFToneChangeEvent interface object length|:x:|:x:|:x:|:x:|
-||RTCDTMFToneChangeEvent interface object name|:x:|:x:|:white_check_mark:|:x:|
-||RTCDTMFToneChangeEvent interface: existence and properties of interface prototype object|:x:|:x:|:white_check_mark:|:x:|
-||RTCDTMFToneChangeEvent interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:white_check_mark:|:x:|
-||RTCDTMFToneChangeEvent interface: attribute tone|:x:|:x:|:white_check_mark:|:x:|
+||RTCDTMFToneChangeEvent interface object name|:x:|:x:|:white_check_mark:|:white_check_mark:|
+||RTCDTMFToneChangeEvent interface: existence and properties of interface prototype object|:x:|:x:|:white_check_mark:|:white_check_mark:|
+||RTCDTMFToneChangeEvent interface: existence and properties of interface prototype object's "constructor" property|:x:|:x:|:white_check_mark:|:white_check_mark:|
+||RTCDTMFToneChangeEvent interface: attribute tone|:x:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCStatsReport interface: existence and properties of interface object|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCStatsReport interface object length|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCStatsReport interface object name|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCStatsReport interface: existence and properties of interface prototype object|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||RTCStatsReport interface: existence and properties of interface prototype object's "constructor" property|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCIdentityProviderGlobalScope interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCIdentityProviderRegistrar interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCIdentityProviderGlobalScope interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCIdentityProviderRegistrar interface: existence and properties of interface object|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCIdentityAssertion interface: existence and properties of interface object|:x:|:x:|:x:|:x:|
 ||RTCIdentityAssertion interface object length|:x:|:x:|:x:|:x:|
 ||RTCIdentityAssertion interface object name|:x:|:x:|:x:|:x:|
@@ -585,17 +585,17 @@
 |:hammer:| **RTCConfiguration-iceServers**|||||
 ||new RTCPeerConnection() should have default configuration.iceServers of undefined|:white_check_mark:|:x:|:white_check_mark:|:x:|
 ||new RTCPeerConnection(config) - { iceServers: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||setConfiguration(config) - { iceServers: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - { iceServers: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - { iceServers: undefined } should succeed|:white_check_mark:|:x:|:white_check_mark:|:x:|
 ||setConfiguration(config) - { iceServers: undefined } should succeed|:white_check_mark:|:x:|:x:|:x:|
-||new RTCPeerConnection(config) - { iceServers: [] } should succeed|:white_check_mark:|:x:|:white_check_mark:|:x:|
+||new RTCPeerConnection(config) - { iceServers: [] } should succeed|:white_check_mark:|:x:|:white_check_mark:|:white_check_mark:|
 ||setConfiguration(config) - { iceServers: [] } should succeed|:white_check_mark:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - { iceServers: [null] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||setConfiguration(config) - { iceServers: [null] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - { iceServers: [null] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - { iceServers: [undefined] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||setConfiguration(config) - { iceServers: [undefined] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - { iceServers: [undefined] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - { iceServers: [{}] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||setConfiguration(config) - { iceServers: [{}] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - { iceServers: [{}] } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with empty list urls should succeed|:x:|:x:|:white_check_mark:|:x:|
 ||setConfiguration(config) - with empty list urls should succeed|:x:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - with stun server should succeed|:white_check_mark:|:x:|:white_check_mark:|:x:|
@@ -639,11 +639,11 @@
 ||new RTCPeerConnection(config) - with empty urls and credentialType oauth should succeed|:x:|:x:|:x:|:x:|
 ||setConfiguration(config) - with empty urls and credentialType oauth should succeed|:x:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - with invalid credentialType should throw TypeError|:white_check_mark:|:x:|:white_check_mark:|:x:|
-||setConfiguration(config) - with invalid credentialType should throw TypeError|:x:|:x:|:x:|:x:|
+||setConfiguration(config) - with invalid credentialType should throw TypeError|:x:|:x:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with credentialType token should throw TypeError|:white_check_mark:|:x:|:x:|:x:|
-||setConfiguration(config) - with credentialType token should throw TypeError|:x:|:x:|:x:|:x:|
+||setConfiguration(config) - with credentialType token should throw TypeError|:x:|:x:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with url field should throw TypeError|:white_check_mark:|:x:|:x:|:x:|
-||setConfiguration(config) - with url field should throw TypeError|:white_check_mark:|:x:|:x:|:x:|
+||setConfiguration(config) - with url field should throw TypeError|:white_check_mark:|:x:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with turns server, credentialType password, and RTCOauthCredential credential should throw InvalidAccessError|:x:|:x:|:x:|:x:|
 ||setConfiguration(config) - with turns server, credentialType password, and RTCOauthCredential credential should throw InvalidAccessError|:x:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - with turns server, credentialType oauth, and string credential should throw InvalidAccessError|:x:|:x:|:x:|:x:|
@@ -671,11 +671,11 @@
 ||setConfiguration({ iceTransportPolicy: 'all' }) with initial iceTransportPolicy relay should succeed|:white_check_mark:|:x:|:x:|:x:|
 ||setConfiguration({}) with initial iceTransportPolicy relay should set new value to all|:white_check_mark:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - with invalid iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||setConfiguration(config) - with invalid iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - with invalid iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with none iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||setConfiguration(config) - with none iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - with none iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with null iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||setConfiguration(config) - with null iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - with null iceTransportPolicy should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection({ iceTransports: 'relay' }) should have no effect|:white_check_mark:|:x:|:white_check_mark:|:x:|
 ||new RTCPeerConnection({ iceTransports: 'invalid' }) should have no effect|:white_check_mark:|:x:|:white_check_mark:|:x:|
 ||new RTCPeerConnection({ iceTransports: null }) should have no effect|:white_check_mark:|:x:|:white_check_mark:|:x:|
@@ -687,9 +687,9 @@
 ||new RTCPeerConnection({ rtcpMuxPolicy: 'require' }) should succeed|:white_check_mark:|:x:|:x:|:x:|
 ||new RTCPeerConnection({ rtcpMuxPolicy: 'negotiate' }) may succeed or throw NotSupportedError|:white_check_mark:|:x:|:x:|:x:|
 ||new RTCPeerConnection(config) - with { rtcpMuxPolicy: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||setConfiguration(config) - with { rtcpMuxPolicy: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - with { rtcpMuxPolicy: null } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||new RTCPeerConnection(config) - with { rtcpMuxPolicy: 'invalid' } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
-||setConfiguration(config) - with { rtcpMuxPolicy: 'invalid' } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:x:|
+||setConfiguration(config) - with { rtcpMuxPolicy: 'invalid' } should throw TypeError|:white_check_mark:|:white_check_mark:|:x:|:white_check_mark:|
 ||setConfiguration({ rtcpMuxPolicy: 'negotiate' }) with initial rtcpMuxPolicy require should throw InvalidModificationError|:x:|:white_check_mark:|:x:|:x:|
 ||setConfiguration({ rtcpMuxPolicy: 'require' }) with initial rtcpMuxPolicy negotiate should throw InvalidModificationError|:x:|:white_check_mark:|:x:|:x:|
 ||setConfiguration({}) with initial rtcpMuxPolicy negotiate should throw InvalidModificationError|:x:|:white_check_mark:|:x:|:x:|
@@ -850,9 +850,9 @@
 ||`Test Total` |1/2|0/2|0/2|0/2|
 |||||||
 |:hammer:| **RTCPeerConnection-constructor**|||||
-||RTCPeerConnection.length|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnection.length|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||new RTCPeerConnection()|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
-||new RTCPeerConnection(null)|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
+||new RTCPeerConnection(null)|:white_check_mark:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||new RTCPeerConnection(undefined)|:x:|:white_check_mark:|:white_check_mark:|:x:|
 ||new RTCPeerConnection({})|:white_check_mark:|:white_check_mark:|:white_check_mark:|:x:|
 ||new RTCPeerConnection({ peerIdentity: toStringThrows })|:x:|:x:|:white_check_mark:|:x:|
@@ -1187,14 +1187,14 @@
 ||`Test Total` |0/12|1/12|0/12|0/12|
 |||||||
 |:hammer:| **RTCPeerConnectionIceEvent-constructor**|||||
-||RTCPeerConnectionIceEvent with no arguments throws TypeError|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnectionIceEvent with no arguments throws TypeError|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent with no eventInitDict (default)|:x:|:x:|:x:|:x:|
 ||RTCPeerConnectionIceEvent with empty object as eventInitDict (default)|:x:|:x:|:x:|:x:|
-||RTCPeerConnectionIceEvent.candidate is null when constructed with { candidate: null }|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent.candidate is null when constructed with { candidate: undefined }|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent with RTCIceCandidate|:x:|:x:|:white_check_mark:|:x:|
+||RTCPeerConnectionIceEvent.candidate is null when constructed with { candidate: null }|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnectionIceEvent.candidate is null when constructed with { candidate: undefined }|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
+||RTCPeerConnectionIceEvent with RTCIceCandidate|:x:|:x:|:white_check_mark:|:white_check_mark:|
 ||RTCPeerConnectionIceEvent with non RTCIceCandidate object throws|:x:|:white_check_mark:|:white_check_mark:|:x:|
-||RTCPeerConnectionIceEvent bubbles and cancelable|:x:|:white_check_mark:|:white_check_mark:|:x:|
+||RTCPeerConnectionIceEvent bubbles and cancelable|:x:|:white_check_mark:|:white_check_mark:|:white_check_mark:|
 ||`Test Total` |0/8|5/8|6/8|5/8|
 |||||||
 |:hammer:| **RTCRtpParameters-codecs**|||||
