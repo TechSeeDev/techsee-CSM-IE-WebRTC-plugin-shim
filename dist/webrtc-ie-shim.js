@@ -240,8 +240,10 @@ process.umask = function() { return 0; };
 
 var browser = require('detect-browser').detect();
 
+var WebRTCProxy = require('./lib/WebRTCProxy.js');
+
 //If it is not internet exploer, do nothign
-if (browser.name === 'ie') {
+if (browser.name === 'ie' && WebRTCProxy) {
 
     //Helper functions to check video nodes
     var checkNewNode = function checkNewNode(node) {
@@ -302,7 +304,6 @@ if (browser.name === 'ie') {
     };
 
     // Add objects to global
-    var WebRTCProxy = require('./lib/WebRTCProxy.js');
     var MediaDevices = require('./lib/MediaDevices.js');
     var VideoRenderer = require('./lib/VideoRenderer.js');
     navigator.mediaDevices = new MediaDevices();
@@ -2045,7 +2046,7 @@ var RTCPeerConnection = function RTCPeerConnection() {
 		var e = createEvent("icecandidate");
 		if (candidate) e.candidate = new RTCIceCandidate({
 			candidate: candidate,
-			sdp: sdpMid,
+			sdpMid: sdpMid,
 			sdpMLineIndex: sdpMLineIndex,
 			ext: {
 				foundation: foundation,
@@ -2839,7 +2840,7 @@ if (browser.name === 'ie') {
     try {
         WebRTCProxy = new ActiveXObject('Cosmo.WebRTCProxy.1');
     } catch (e) {
-        console.error('IE WebRTC Plugin not installed');
+        console.error('TechSee WebRTC Plugin for IE is not installed');
     }
 }
 

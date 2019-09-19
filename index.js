@@ -1,9 +1,10 @@
 var browser = require('detect-browser').detect();
 
+var WebRTCProxy = require('./lib/WebRTCProxy.js');
+
 //If it is not internet exploer, do nothign
-if (browser.name === 'ie') {
+if (browser.name === 'ie' && WebRTCProxy) {
     // Add objects to global
-    var WebRTCProxy = require('./lib/WebRTCProxy.js');
     var MediaDevices = require('./lib/MediaDevices.js');
     var VideoRenderer = require('./lib/VideoRenderer.js');
     navigator.mediaDevices = new MediaDevices();
