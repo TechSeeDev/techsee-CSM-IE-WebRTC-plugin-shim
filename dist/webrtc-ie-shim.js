@@ -1218,6 +1218,7 @@ module.exports = MediaDevices;
 },{"./EventTarget.js":4,"./MediaStream.js":7,"./MediaStreamTrack.js":8,"./WebRTCProxy.js":17}],7:[function(require,module,exports){
 'use strict';
 
+var MediaStreamTrack = require('./MediaStreamTrack');
 var EventTarget = require('./EventTarget.js').EventTarget;
 var defineEventAttribute = require('./EventTarget.js').defineEventAttribute;
 /*
@@ -1241,7 +1242,7 @@ interface MediaStream : EventTarget {
  */
 var count = 0;
 
-var MediaStream = function MediaStream(label, tracks) {
+var MediaStream = function MediaStream(tracks, label) {
     //Init event target
     EventTarget.call(this);
 
@@ -1250,10 +1251,22 @@ var MediaStream = function MediaStream(label, tracks) {
         tracks: {}
     };
 
-    //Add input tracks to our map
-    if (tracks) for (var i = 0; i < tracks.length; ++i) {
-        this.priv.tracks[tracks[i].id] = tracks[i];
-    }var id = label || 'stream-' + count++;
+    //Actual WebRTC MediaStream supports MediaStream or array of MediaTracks as constructor input.
+    //Because of time constraints we implementing the support for array of tracks only.
+    if (tracks) {
+        if (!(tracks instanceof Array)) {
+            throw new Error('tracks should be an array of MediaStreamTrack');
+        }
+
+        for (var i = 0; i < tracks.length; ++i) {
+            if (!(tracks[i] instanceof MediaStreamTrack)) {
+                throw new Error('Each item in tracks array should be an instance of MediaStreamTrack');
+            }
+            this.priv.tracks[tracks[i].id] = tracks[i];
+        }
+    }
+
+    var id = label || 'stream-' + count++;
 
     Object.defineProperty(this, 'id', { enumerable: true, configurable: false, writable: false, value: id });
     Object.defineProperty(this, 'active', { enumerable: true, configurable: false, writable: false, value: true });
@@ -1349,7 +1362,7 @@ Object.defineProperty(MediaStream, 'name', {
 Object.defineProperty(MediaStream, 'prototype', { writable: false });
 module.exports = MediaStream;
 
-},{"./EventTarget.js":4}],8:[function(require,module,exports){
+},{"./EventTarget.js":4,"./MediaStreamTrack":8}],8:[function(require,module,exports){
 'use strict';
 
 var EventTarget = require('./EventTarget.js').EventTarget;
@@ -1906,7 +1919,7 @@ function createRTCConfiguration(configuration) {
  	sequence<RTCCertificate> certificates;
  	[EnforceRange]
  	octet                    iceCandidatePoolSize = 0;
- };  
+ };
  */
 	//Set configuration with default values
 	var sanitized = _extends({
@@ -1927,7 +1940,7 @@ function createRTCConfiguration(configuration) {
 		//Check each one
 		for (var i = 0; i < sanitized.iceServers.length; ++i) {
 			/*
-    * 
+    *
     dictionary RTCIceServer {
    	required (DOMString or sequence<DOMString>) urls;
    		 DOMString                          username;
@@ -2090,7 +2103,7 @@ var RTCPeerConnection = function RTCPeerConnection() {
 	};
 	priv.pc.onaddstream = function (label) {
 		//Create new stream
-		var stream = new MediaStream(label);
+		var stream = new MediaStream(null, label);
 
 		//Get remote stream tracks
 		priv.pc.getRemoteStreamTracks(label, function () {
@@ -2261,7 +2274,7 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 		if (self.remoteDescription === null) throw new InvalidStateError();
 
 		/*
-  2.  Let p be a new promise.   
+  2.  Let p be a new promise.
   3.  If candidate.sdpMid is not null, run the following steps:
       1.  If candidate.sdpMid is not equal to the mid of any media description in ``[`remoteDescription`](#dom-rtcpeerconnection-remotedescription)`` , [reject](#dfn-rejected) p with a newly [created](https://www.w3.org/TR/2016/REC-WebIDL-1-20161215/#dfn-create-exception) `OperationError` and abort these steps.
   4.  Else, if candidate.sdpMLineIndex is not null, run the following steps:
