@@ -1921,7 +1921,7 @@ function createRTCConfiguration(configuration) {
  	sequence<RTCCertificate> certificates;
  	[EnforceRange]
  	octet                    iceCandidatePoolSize = 0;
- };  
+ };
  */
 	//Set configuration with default values
 	var sanitized = _extends({
@@ -1942,7 +1942,7 @@ function createRTCConfiguration(configuration) {
 		//Check each one
 		for (var i = 0; i < sanitized.iceServers.length; ++i) {
 			/*
-    * 
+    *
     dictionary RTCIceServer {
    	required (DOMString or sequence<DOMString>) urls;
    		 DOMString                          username;
@@ -2177,23 +2177,38 @@ RTCPeerConnection.prototype.getStats = function (selector) {
 	var priv = this.priv;
 
 	return new Promise(function (selector, resolve, reject) {
-		if (!priv.pc || priv.isClosed) return reject(new InvalidStateError());
+		var priv = this.priv;
 
-		if (!selector) {
-			priv.pc.getStats(function (rtcStatsReport) {
-				resolve(rtcStatsReport);
-			}, function () {
-				reject(new Error('getStats failed (selector null)'));
-			}, null);
-		} else if (selector instanceof MediaStreamTrack && (selector.kind === 'audio' || selector.kind === 'video')) {
-			priv.pc.getStats(function (rtcStatsReport) {
-				resolve(rtcStatsReport);
-			}, function () {
-				reject(new Error("getStats failed (selector " + selector.kind + ")"));
-			}, selector);
-		} else {
-			return reject(new Error('getStats failed: invalid selector passed'));
-		}
+		return new Promise(function (resolve, reject) {
+			console.log('RTCPeerConnection.prototype.getStats selector =' + JSON.stringify(selector));
+			if (!priv.pc || priv.isClosed) return reject(new InvalidStateError());
+
+			console.log('RTCPeerConnection before');
+			if (!selector) {
+				console.log('going to call priv.pc.getStats with null');
+				priv.pc.getStats(function (rtcStatsReport) {
+					resolve(rtcStatsReport);
+				}, function () {
+					reject(new Error('getStats failed (selector null)'));
+				}, null);
+			} else if (selector === null) {
+				console.log('going to call priv.pc.getStats with null2');
+				priv.pc.getStats(function (rtcStatsReport) {
+					resolve(rtcStatsReport);
+				}, function () {
+					reject(new Error('getStats failed (selector null)'));
+				}, null);
+			} else if (selector instanceof MediaStreamTrack && (selector.kind === 'audio' || selector.kind === 'video')) {
+				priv.pc.getStats(function (rtcStatsReport) {
+					resolve(rtcStatsReport);
+				}, function () {
+					reject(new Error("getStats failed (selector " + selector.kind + ")"));
+				}, selector);
+			} else {
+				console.log('RTCPeerConnection else');
+				return reject(new Error('getStats failed: invalid selector passed'));
+			}
+		});
 	});
 };
 
@@ -2300,7 +2315,7 @@ RTCPeerConnection.prototype.addIceCandidate = function (candidate) {
 		if (self.remoteDescription === null) throw new InvalidStateError();
 
 		/*
-  2.  Let p be a new promise.   
+  2.  Let p be a new promise.
   3.  If candidate.sdpMid is not null, run the following steps:
       1.  If candidate.sdpMid is not equal to the mid of any media description in ``[`remoteDescription`](#dom-rtcpeerconnection-remotedescription)`` , [reject](#dfn-rejected) p with a newly [created](https://www.w3.org/TR/2016/REC-WebIDL-1-20161215/#dfn-create-exception) `OperationError` and abort these steps.
   4.  Else, if candidate.sdpMLineIndex is not null, run the following steps:
