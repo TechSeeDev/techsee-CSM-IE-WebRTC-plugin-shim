@@ -28,6 +28,10 @@ if (browser.name === 'ie' && WebRTCProxy) {
         //Method called by demand in IE for unbind video elements
         unBindVideoElement: function (element) {
             checkRemovedNode(element);
+        },
+
+        getVersion: function getVersion() {
+            return WebRTCProxy.getVersion();
         }
     };
 
@@ -128,4 +132,4 @@ if (browser.name === 'ie' && WebRTCProxy) {
             value: value
         });
     }
-}
+}
