@@ -327,6 +327,10 @@ if (browser.name === 'ie' && WebRTCProxy) {
         //Method called by demand in IE for unbind video elements
         unBindVideoElement: function unBindVideoElement(element) {
             checkRemovedNode(element);
+        },
+
+        getVersion: function getVersion() {
+            return WebRTCProxy.getVersion();
         }
     };
 
