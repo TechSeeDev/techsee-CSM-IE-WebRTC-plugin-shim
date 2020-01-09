@@ -2406,7 +2406,7 @@ RTCPeerConnection.prototype.addTransceiver = function (trackOrKind, init) {
 };
 
 RTCPeerConnection.prototype.getStats = function () {
-    return {};
+    return Promise.resolve({});
 };
 
 /*
